@@ -1,11 +1,11 @@
+PROJECT(mycroft-gui-mark-2)
+
 # Set minimum CMake version (required for CMake 3.0 or later)
 cmake_minimum_required(VERSION 2.8.12)
  
-set(QT_MIN_VERSION "5.9.0")
-set(KF5_MIN_VERSION "5.0.0")
+set(QT_MIN_VERSION "5.11.0")
+set(KF5_MIN_VERSION "5.50.0")
  
-PROJECT(mycroft-gui-mark-2)
-
 # Use Extra CMake Modules (ECM) for common functionality.
 # See http://api.kde.org/ecm/manual/ecm.7.html
 # and http://api.kde.org/ecm/manual/ecm-kde-modules.7.html
@@ -20,9 +20,6 @@ include(KDEInstallDirs)
 set(CMAKE_AUTOMOC ON)
 
 
-configure_file(config-mycroft.h.in ${CMAKE_CURRENT_BINARY_DIR}/config-mycroft.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Quick
     Core
@@ -34,7 +31,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 
 find_package(LibKWorkspace 5.14.90 CONFIG REQUIRED)
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS I18n)
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS I18n Plasma Package)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
