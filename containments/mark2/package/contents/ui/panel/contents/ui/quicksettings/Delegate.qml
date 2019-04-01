@@ -44,7 +44,7 @@ Controls.Control {
         Kirigami.Icon {
             id: icon
             isMask: true
-            color: Kirigami.Theme.highlightColor
+            color: iconMouseArea.pressed ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.highlightColor
             Layout.preferredWidth: Kirigami.Units.iconSizes.medium
             Layout.preferredHeight: Layout.preferredWidth
             Layout.alignment: Qt.AlignVCenter
@@ -53,13 +53,15 @@ Controls.Control {
             id: label
             Layout.fillWidth: true
             text: model.text
+            font.bold: true
+            color: iconMouseArea.pressed ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
             //visible: paintedWidth <= parent.width
             elide: Text.ElideRight
         }
     }
     background: Rectangle {
         radius: Kirigami.Units.largeSpacing
-        color: toggled ? PlasmaCore.ColorScope.highlightColor : PlasmaCore.ColorScope.backgroundColor
+        color: iconMouseArea.pressed ? PlasmaCore.ColorScope.highlightColor : PlasmaCore.ColorScope.backgroundColor
     }
     MouseArea {
         id: iconMouseArea

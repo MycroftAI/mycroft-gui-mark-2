@@ -30,17 +30,15 @@ import "./panel/contents/ui" as Panel
 
 import Mycroft 1.0 as Mycroft
 
-MouseArea {
+Item {
     id: root
     width: 480
     height: 640
-    drag.filterChildren: true
-drag.target: skillView
+
 //BEGIN properties
     property Item toolBox
     readonly property bool smallScreenMode: Math.min(width, height) < Kirigami.Units.gridUnit * 18
-    property int startMouseY: -1
-    property int startVolume: -1
+
 //END properties
 
 //BEGIN slots
@@ -57,6 +55,23 @@ drag.target: skillView
         }
     }
 
+    
+//END slots
+
+MouseArea {
+    id: mainParent
+
+    rotation: -90
+    anchors.centerIn: parent
+    width: parent.height
+    height: parent.width
+
+    property int startMouseY: -1
+    property int startVolume: -1
+
+    drag.filterChildren: true
+    drag.target: skillView
+
     onPressed: {
         startVolume = paSinkModel.preferredSink.volume
         startMouseY = mouse.y
@@ -64,18 +79,18 @@ drag.target: skillView
     onPositionChanged: {
         var delta = startMouseY - mouse.y;
         if (Math.abs(delta) > Kirigami.Units.gridUnit*2) {
-            root.preventStealing = true
+            mainParent.preventStealing = true
         }
-        if (root.preventStealing) {
+        if (mainParent.preventStealing) {
             //mouse.accepted = true;
             paSinkModel.preferredSink.volume = Math.max(PA.PulseAudio.MinimalVolume, Math.min(PA.PulseAudio.MaximalVolume, startVolume + (delta/height)*(PA.PulseAudio.MaximalVolume - PA.PulseAudio.MinimalVolume)))
             feedbackTimer.running = true;
             volSlider.show();
         }
     }
-    onReleased: root.preventStealing = false;
-    onCanceled: root.preventStealing = false;
-//END slots
+    onReleased: mainParent.preventStealing = false;
+    onCanceled: mainParent.preventStealing = false;
+    
 
 //BEGIN PulseAudio
     PA.SinkModel {
@@ -101,46 +116,66 @@ drag.target: skillView
     }
 //END VirtualKeyboard
 
-    Image {
-        source: "background.png"
-        fillMode: Image.PreserveAspectFit
-        anchors.fill: parent
-        opacity: !skillView.currentItem
-        Behavior on opacity {
-            OpacityAnimator {
-                duration: Kirigami.Units.longDuration
-                easing.type: Easing.InQuad
+        Image {
+            source: "background.png"
+            fillMode: Image.PreserveAspectFit
+            anchors.fill: parent
+            opacity: !skillView.currentItem
+            Behavior on opacity {
+                OpacityAnimator {
+                    duration: Kirigami.Units.longDuration
+                    easing.type: Easing.InQuad
+                }
             }
         }
-    }
 
-    Panel.SlidingPanel {
-        id: panel
-        z: 999
-        width: root.width
-        dragMargin: Kirigami.Units.gridUnit * 2
-        dim: true
-    }
-    Rectangle {
-        z: 998
-        anchors.fill:parent
-        color: "black"
-        opacity: panel.position * 0.8
-        visible: panel.position > 0
-    }
+        Panel.SlidingPanel {
+            id: panel
+            z: 999
+            width: mainParent.width
+            height: mainParent.height
+            edge: {
+                switch (mainParent.rotation) {
+                case -90:
+                    return Qt.LeftEdge;
+                case 90:
+                    return Qt.RightEdge;
+                case 180: return Qt.BottomEdge;
+                case 0:
+                default:
+                    return Qt.TopEdge;
+                }
+            }
+            //HACK for rotation
+            contentItem.rotation: mainParent.rotation
+            contentItem.transform: Translate {
+                x: root.width/2 - panel.contentItem.width/2
+                y: root.height/2 - panel.contentItem.height/2
+            }
+            dragMargin: Kirigami.Units.gridUnit * 2
+            dim: true
+        }
+        Rectangle {
+            z: 998
+            anchors.fill:parent
+            color: "black"
+            opacity: panel.position * 0.8
+            visible: panel.position > 0
+        }
 
-    Mycroft.SkillView {
-        id: skillView
-        anchors.fill: parent
-        Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+        Mycroft.SkillView {
+            id: skillView
+            anchors.fill: parent
+            Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
 
-        bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
-    }
+            bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
+        }
 
-    Controls.Button {
-        anchors.centerIn: parent
-        text: "start"
-        visible: Mycroft.MycroftController.status == Mycroft.MycroftController.Closed
-        onClicked: Mycroft.MycroftController.start();
+        Controls.Button {
+            anchors.centerIn: parent
+            text: "start"
+            visible: Mycroft.MycroftController.status == Mycroft.MycroftController.Closed
+            onClicked: Mycroft.MycroftController.start();
+        }
     }
 }
