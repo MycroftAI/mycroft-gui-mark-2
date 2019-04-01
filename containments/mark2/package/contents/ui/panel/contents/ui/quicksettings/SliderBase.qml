@@ -104,6 +104,6 @@ Controls.Control {
 
     background: Rectangle {
         radius: Kirigami.Units.largeSpacing
-        color: PlasmaCore.ColorScope.backgroundColor
+        color: Kirigami.Theme.backgroundColor
     }
 }

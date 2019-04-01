@@ -44,22 +44,4 @@ SliderBase {
         interval: 250
         onTriggered: feedback.play(paSinkModel.preferredSink.index);
     }
-    //TODO: no way to query programmatically the volume from mycroft, especially without making it speak
-    Connections {
-        target: Mycroft.MycroftController
-        onSocketStatusChanged: {
-            if (Mycroft.MycroftController.status == Mycroft.MycroftController.Open) {
-                //Mycroft.MycroftController.sendRequest("mycroft.volume.query", {});
-            }
-        }
-        onSkillDataRecieved: {
-            for (var i in data) {
-                print(i+ ": "+data[i])
-            }
-            //TODO
-            if (type == "mycroft.volume") {
-                
-            }
-        }
-    }
 }
