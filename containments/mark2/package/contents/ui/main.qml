@@ -68,7 +68,7 @@ MouseArea {
         case "CCW":
             return -90;
         case "UD":
-            return 180:
+            return 180;
         case "NORMAL":
         default:
             return 0;
