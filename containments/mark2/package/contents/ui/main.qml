@@ -61,10 +61,22 @@ Item {
 MouseArea {
     id: mainParent
 
-    rotation: -90
+    rotation: {
+        switch (plasmoid.configuration.rotation) {
+        case "CW":
+            return 90;
+        case "CCW":
+            return -90;
+        case "UD":
+            return 180:
+        case "NORMAL":
+        default:
+            return 0;
+        }
+    }
     anchors.centerIn: parent
-    width: parent.height
-    height: parent.width
+    width: rotation == 0 || rotation == 180 ? parent.width : parent.height
+    height: rotation == 0 || rotation == 180 ? parent.height : parent.width
 
     property int startMouseY: -1
     property int startVolume: -1
