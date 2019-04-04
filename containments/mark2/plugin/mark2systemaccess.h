@@ -18,23 +18,26 @@
 #pragma once
 
 
-#include <Plasma/Containment>
+#include <QObject>
 
 
-class MycroftMark2 : public Plasma::Containment
+class Mark2SystemAccess : public QObject
 {
     Q_OBJECT
 
 public:
-    MycroftMark2( QObject *parent, const QVariantList &args );
-    ~MycroftMark2();
+    Mark2SystemAccess(QObject *parent=0);
+    ~Mark2SystemAccess();
+
+    static Mark2SystemAccess *instance();
 
 public Q_SLOTS:
     void executeCommand(const QString &command);
 
     void requestShutdown();
     void requestReboot();
-private:
 
+private:
+    bool m_networkConfigurationVisible = false;
 };
 

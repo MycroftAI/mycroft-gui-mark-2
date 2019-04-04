@@ -15,39 +15,45 @@
  *
  */
 
-#include "mycroftmark2.h"
+#include "mark2systemaccess.h"
 
 #include <QDebug>
 #include <QProcess>
 
 #include <kworkspace5/kdisplaymanager.h>
 
-MycroftMark2::MycroftMark2(QObject *parent, const QVariantList &args)
-    : Plasma::Containment(parent, args)
-{
-    //setHasConfigurationInterface(true);
-}
-
-MycroftMark2::~MycroftMark2()
+Mark2SystemAccess::Mark2SystemAccess(QObject *parent)
+    : QObject(parent)
 {
 }
 
-void MycroftMark2::executeCommand(const QString &command)
+Mark2SystemAccess::~Mark2SystemAccess()
+{
+}
+
+Mark2SystemAccess *Mark2SystemAccess::instance()
+{
+    static Mark2SystemAccess* s_self = nullptr;
+    if (!s_self) {
+        s_self = new Mark2SystemAccess;
+    }
+    return s_self;
+}
+
+void Mark2SystemAccess::executeCommand(const QString &command)
 {
     qWarning()<<"Executing"<<command;
     QProcess::startDetached(command);
 }
 
-void MycroftMark2::requestShutdown()
+void Mark2SystemAccess::requestShutdown()
 {
     KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeHalt);
 }
 
-void MycroftMark2::requestReboot()
+void Mark2SystemAccess::requestReboot()
 {
     KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeReboot);
 }
 
-K_EXPORT_PLASMA_APPLET_WITH_JSON(quicksettings, MycroftMark2, "metadata.json")
-
-#include "mycroftmark2.moc"
+#include "mark2systemaccess.moc"

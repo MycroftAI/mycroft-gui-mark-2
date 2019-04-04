@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 by Marco Martin <mart@kde.org>
+ * Copyright 2019 by Marco Martin <mart@kde.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  *
  */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
-import org.kde.kirigami 2.5 as Kirigami
-import Mycroft 1.0 as Mycroft
-import Mycroft.Private.Mark2SystemAccess 1.0
+#pragma once
 
-Delegate {
-    iconSource: "system-shutdown"
-    text: i18n("Turn Off")
-    onClicked: {
-        Mark2SystemAccess.requestShutdown();
-    }
-}
+#include <QQmlExtensionPlugin> 
+
+class QQmlEngine;
+
+class Mark2SystemAccessPlugin : public QQmlExtensionPlugin
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+
+public:
+    void registerTypes(const char *uri);
+    
+};
 
