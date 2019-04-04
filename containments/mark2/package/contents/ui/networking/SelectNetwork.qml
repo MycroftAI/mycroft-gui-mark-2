@@ -19,6 +19,7 @@ import QtQuick.Layouts 1.4
 import QtQuick 2.4
 import QtQuick.Controls 2.3
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.kirigami 2.5 as Kirigami
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 
@@ -98,10 +99,24 @@ Rectangle {
                 Layout.fillWidth: true
             }
 
-            ScrollView {
+            Kirigami.ScrollablePage {
+                id: page
+                supportsRefreshing: true
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 clip: true
+
+                onRefreshingChanged: {
+                    if (refreshing) {
+                        refreshTimer.restart()
+                        handler.requestScan();
+                    }
+                }
+                Timer {
+                    id: refreshTimer
+                    interval: 3000
+                    onTriggered: page.refreshing = false
+                }
 
                 ListView {
                     id: connectionView
@@ -123,24 +138,81 @@ Rectangle {
             }
 
             RowLayout {
-                Button {
-                    Kirigami.Theme.inherit: false
-                    Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
-                    icon.name: "go-previous-symbolic"
-                    flat: true
+                Kirigami.BasicListItem {
+                    Layout.fillWidth: false
+                    visible: networkStatus.networkStatus !== "Disconnected"
+                    icon: "go-previous-symbolic"
+                    text: i18n("Back")
+                    Layout.preferredWidth: implicitWidth + height
                     onClicked: Mark2SystemAccess.networkConfigurationVisible = false;
                 }
                 Item {
                     Layout.fillWidth: true
                 }
-                Button {
-                    Kirigami.Theme.inherit: false
-                    Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
-                    icon.name: "view-refresh"
+                Kirigami.BasicListItem {
+                    Layout.fillWidth: false
+                    icon: "view-refresh"
                     text: i18n("Refresh")
-                    flat: true
-                    onClicked: handler.requestScan();
+                    Layout.preferredWidth: implicitWidth + height
+                    onClicked: {
+                        page.refreshing = true;
+                        connectionView.contentY = -Kirigami.Units.gridUnit * 4;
+                    }
                 }
+            }
+        }
+    }
+
+    Kirigami.OverlaySheet {
+        id: passwordSheet
+        parent: networkSelectionView
+
+        onSheetOpenChanged: {
+            if (sheetOpen) {
+                passField.text = "";
+                passField.forceActiveFocus();
+            }
+        }
+
+        contentItem: ColumnLayout {
+            implicitWidth: Kirigami.Units.gridUnit * 25
+
+            Kirigami.Heading {
+                level: 1
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+                text: i18n("Enter Password For %1", connectionName)
+                color: Kirigami.Theme.highlightColor
+            }
+
+            PlasmaComponents.TextField {
+                id: passField
+
+                Layout.fillWidth: true
+                echoMode: TextInput.Password
+                revealPasswordButtonShown: true
+                placeholderText: i18n("Password...")
+                validator: RegExpValidator {
+                    regExp: if (securityType == PlasmaNM.Enums.StaticWep) {
+                                /^(?:.{5}|[0-9a-fA-F]{10}|.{13}|[0-9a-fA-F]{26}){1}$/
+                            } else {
+                                /^(?:.{8,64}){1}$/
+                            }
+                }
+
+                onAccepted: {
+                    networkingLoader.source = "Connecting.qml"
+                    handler.addAndActivateConnection(devicePath, specificPath, passField.text)
+                }
+            }
+
+            Button {
+                Layout.fillWidth: true
+                text: i18n("Connect")
+
+                onClicked: passField.accepted();
             }
         }
     }

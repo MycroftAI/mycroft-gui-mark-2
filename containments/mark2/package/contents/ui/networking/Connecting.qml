@@ -89,7 +89,7 @@ Item {
             id: l1
             Layout.fillWidth: true
             Layout.fillHeight: true
-            source: Qt.resolvedUrl("Animations/connecting.json")
+            source: Qt.resolvedUrl("animations/connecting.json")
             loops: Animation.Infinite
             fillMode: Image.PreserveAspectFit
             running: true

@@ -26,24 +26,25 @@ import Mycroft.Private.Mark2SystemAccess 1.0
 Item {
     id: successView
     anchors.fill: parent
-    
+
     ColumnLayout {
         anchors.fill: parent
         LottieAnimation {
             id: successAnimation
             Layout.fillWidth: true
             Layout.fillHeight: true
-            source: Qt.resolvedUrl("Animations/success.json")
+            source: Qt.resolvedUrl("animations/success.json")
             loops: 0
             fillMode: Image.PreserveAspectFit
             running: true
-            
+
             onRunningChanged: {
-                if(successAnimation.status == 1){
-                    networkingLoader.source = "../networking/SelectNetwork.qml"
+                if (successAnimation.status == 1) {
+                    Mark2SystemAccess.networkConfigurationVisible = false;
+                    networkingLoader.source = "SelectNetwork.qml"
                 }
             }
-        }    
+        }
     }
 }
- 
+
