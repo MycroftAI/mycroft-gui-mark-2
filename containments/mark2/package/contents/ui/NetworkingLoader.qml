@@ -21,6 +21,6 @@ Loader {
     }
 
     Component.onCompleted: {
-        networkingLoader.source = "../networking/SelectNetwork.qml"
+        networkingLoader.source = "networking/SelectNetwork.qml"
     }
 }
