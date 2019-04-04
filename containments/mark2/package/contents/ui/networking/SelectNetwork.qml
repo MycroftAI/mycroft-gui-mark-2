@@ -21,13 +21,14 @@ import QtQuick.Controls 2.0
 import org.kde.kirigami 2.5 as Kirigami
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 
-Item {
+Rectangle {
     id: networkSelectionView
+    color: "black"
     anchors.fill: parent
     property var pathToRemove
     property bool isStartUp: false
         
-    function removeConnection(){
+    function removeConnection() {
         handler.removeConnection(pathToRemove)
     }
     

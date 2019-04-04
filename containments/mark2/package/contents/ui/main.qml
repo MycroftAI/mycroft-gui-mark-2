@@ -183,6 +183,10 @@ MouseArea {
             bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
         }
 
+        NetworkingLoader {
+            anchors.fill: skillView
+            
+        }
         Controls.Button {
             anchors.centerIn: parent
             text: "start"

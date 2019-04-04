@@ -60,7 +60,12 @@ Item {
             }
         }
     }
-    
+
+    Timer {
+        id: closeTimer
+        interval: 1000
+        onTriggered: Mark2SystemAccess.networkConfigurationVisible = false
+    }
     ColumnLayout {
         anchors.fill: parent
     

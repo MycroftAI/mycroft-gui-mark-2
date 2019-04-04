@@ -24,6 +24,7 @@
 class Mark2SystemAccess : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool networkConfigurationVisible MEMBER m_networkConfigurationVisible NOTIFY networkConfigurationVisibleChanged)
 
 public:
     Mark2SystemAccess(QObject *parent=0);
@@ -36,6 +37,9 @@ public Q_SLOTS:
 
     void requestShutdown();
     void requestReboot();
+
+Q_SIGNALS:
+    void networkConfigurationVisibleChanged();
 
 private:
     bool m_networkConfigurationVisible = false;
