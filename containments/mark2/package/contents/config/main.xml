@@ -6,7 +6,7 @@
   <kcfgfile name=""/>
 
   <group name="General">
-    <entry name="Rotation" type="String">
+    <entry name="rotation" type="String">
       <label>
           Software rotation of the graphics. Allowed values are
           NORMAL: 0 degrees (default)
