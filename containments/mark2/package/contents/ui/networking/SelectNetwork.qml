@@ -140,6 +140,7 @@ Rectangle {
             RowLayout {
                 Kirigami.BasicListItem {
                     Layout.fillWidth: false
+                    separatorVisible: false
                     visible: networkStatus.networkStatus !== "Disconnected"
                     icon: "go-previous-symbolic"
                     text: i18n("Back")
@@ -151,6 +152,7 @@ Rectangle {
                 }
                 Kirigami.BasicListItem {
                     Layout.fillWidth: false
+                    separatorVisible: false
                     icon: "view-refresh"
                     text: i18n("Refresh")
                     Layout.preferredWidth: implicitWidth + height

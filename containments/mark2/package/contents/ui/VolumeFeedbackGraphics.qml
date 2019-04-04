@@ -93,6 +93,7 @@ T.Slider {
     }
     orientation: Qt.Vertical
     opacity: 0
+    enabled: opacity == 1
     Behavior on opacity {
         OpacityAnimator {
             duration: Kirigami.Units.longDuration
