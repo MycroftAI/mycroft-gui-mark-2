@@ -24,9 +24,6 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Quick
     Core
     Qml
-    Network
-    WebSockets
-    WebView
 )
 
 find_package(LibKWorkspace 5.14.90 CONFIG REQUIRED)
