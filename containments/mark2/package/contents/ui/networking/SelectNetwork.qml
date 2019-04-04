@@ -17,21 +17,30 @@
 
 import QtQuick.Layouts 1.4
 import QtQuick 2.4
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.3
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 
+import Mycroft.Private.Mark2SystemAccess 1.0
+
 Rectangle {
     id: networkSelectionView
-    color: "black"
+
     anchors.fill: parent
-    property var pathToRemove
+
+    Kirigami.Theme.inherit: false
+    Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+    color: Kirigami.Theme.backgroundColor
+
+    property string pathToRemove
+    property string nameToRemove
     property bool isStartUp: false
-        
+
     function removeConnection() {
         handler.removeConnection(pathToRemove)
     }
-    
+
     PlasmaNM.NetworkStatus {
         id: networkStatus
     }
@@ -56,108 +65,116 @@ Rectangle {
         id: appletProxyModel
         sourceModel: connectionModel
     }
-    Item {
-        id: topArea
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        height: Kirigami.Units.gridUnit * 2
-        
-        Kirigami.Heading {
-            id: connectionTextHeading
-            level: 1
-            wrapMode: Text.WordWrap
-            anchors.centerIn: parent
-            font.bold: true
-            text: "Select Your Wi-Fi"
-            color: Kirigami.Theme.linkColor
+
+    PlasmaCore.ColorScope {
+        anchors.fill: parent
+        colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
+        Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+
+        ColumnLayout {
+            spacing: 0
+            anchors {
+                fill: parent
+                margins: Kirigami.Units.largeSpacing
+            }
+
+
+            Kirigami.Heading {
+                id: connectionTextHeading
+                level: 1
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+                text: i18n("Select Your Wi-Fi")
+                color: Kirigami.Theme.highlightColor
+            }
+            Item {
+                Layout.preferredHeight: Kirigami.Units.largeSpacing
+            }
+
+            Kirigami.Separator {
+                Layout.preferredHeight: 1
+                Layout.fillWidth: true
+            }
+
+            ScrollView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+
+                ListView {
+                    id: connectionView
+
+                    model: appletProxyModel
+                    currentIndex: -1
+                    //boundsBehavior: Flickable.StopAtBounds
+                    delegate: NetworkItem{}
+                }
+            }
+
+            Kirigami.Separator {
+                Layout.preferredHeight: 1
+                Layout.fillWidth: true
+            }
+
+            Item {
+                Layout.preferredHeight: Kirigami.Units.largeSpacing
+            }
+
+            RowLayout {
+                Button {
+                    Kirigami.Theme.inherit: false
+                    Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+                    icon.name: "go-previous-symbolic"
+                    flat: true
+                    onClicked: Mark2SystemAccess.networkConfigurationVisible = false;
+                }
+                Item {
+                    Layout.fillWidth: true
+                }
+                Button {
+                    Kirigami.Theme.inherit: false
+                    Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+                    icon.name: "view-refresh"
+                    text: i18n("Refresh")
+                    flat: true
+                    onClicked: handler.requestScan();
+                }
+            }
         }
     }
 
-    Item {
-        anchors.top: topArea.bottom
-        anchors.topMargin: Kirigami.Units.largeSpacing
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: areaSep.top
-        anchors.bottomMargin: Kirigami.Units.largeSpacing
-        
-        ListView {
-            id: connectionView
-            property bool availableConnectionsVisible: true
-            anchors.fill: parent
-            clip: true
-            model: appletProxyModel
-            currentIndex: -1
-            boundsBehavior: Flickable.StopAtBounds
-            delegate: NetworkItem{}
-        }
-    }
-    
-    Kirigami.Separator {
-        id: areaSep
-        anchors.bottom: bottomArea.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 1
-    }
-    
-    Item {
-        id: bottomArea
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: Kirigami.Units.largeSpacing * 1.15
-        height: backIcon.implicitHeight + Kirigami.Units.largeSpacing * 1.15
-        visible: isStartUp ? 0 : 1
-        enabled: isStartUp ? 0 : 1
-                
-        RowLayout {
-            anchors.fill: parent
-            
-            Kirigami.Icon {
-                id: backIcon
-                source: "system-reboot"
-                Layout.preferredHeight: Kirigami.Units.iconSizes.medium
-                Layout.preferredWidth: Kirigami.Units.iconSizes.medium
-            }
-            
-            Kirigami.Heading {
-                level: 2
-                wrapMode: Text.WordWrap
-                font.bold: true
-                text: "Refresh"
-                Layout.fillWidth: true
-                Layout.preferredHeight: Kirigami.Units.gridUnit * 2
-            }
-        }
-        
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                handler.requestScan();
-            }
-        }
-    }
-    
     Kirigami.OverlaySheet {
         id: networkActions
-        leftPadding: 0
-        rightPadding: 0
         parent: networkSelectionView
-         
-        ColumnLayout {
+
+        contentItem: ColumnLayout {
             implicitWidth: Kirigami.Units.gridUnit * 25
-            spacing: 0 
-         
-            Button {
+
+            Label {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                text: "Forget Network"
-                
-                onClicked: {
-                    removeConnection()
-                    networkActions.close()
+                wrapMode: Text.WordWrap
+                text: i18n("Are you sure you want to forget the network %1?", nameToRemove)
+            }
+            RowLayout {
+                Button {
+                    Layout.fillWidth: true
+                    text: i18n("Forget")
+
+                    onClicked: {
+                        removeConnection()
+                        networkActions.close()
+                    }
+                }
+                Button {
+                    Layout.fillWidth: true
+                    text: i18n("Cancel")
+
+                    onClicked: {
+                        networkActions.close()
+                    }
                 }
             }
         }

@@ -30,58 +30,59 @@ Kirigami.AbstractListItem {
     property bool predictableWirelessPassword: !model.Uuid && model.Type == PlasmaNM.Enums.Wireless &&
                                                (model.SecurityType == PlasmaNM.Enums.StaticWep || model.SecurityType == PlasmaNM.Enums.WpaPsk ||
                                                 model.SecurityType == PlasmaNM.Enums.Wpa2Psk)
-    
+
     contentItem: Item {
-            implicitWidth: delegateLayout.implicitWidth;
-            implicitHeight: delegateLayout.implicitHeight;
-    
-    ColumnLayout {
-        id: delegateLayout
-        anchors {
-            left: parent.left;
-            top: parent.top;
-            right: parent.right;
-        }
+        implicitWidth: delegateLayout.implicitWidth;
+        implicitHeight: delegateLayout.implicitHeight;
 
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Math.round(units.gridUnit / 2)
-
-            Kirigami.Icon {
-                id: connectionSvgIcon
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-                Layout.preferredHeight: units.iconSizes.medium
-                Layout.preferredWidth: units.iconSizes.medium
-                //elementId: model.ConnectionIcon
-                source: "network-wireless-connected-100"
+        ColumnLayout {
+            id: delegateLayout
+            anchors {
+                left: parent.left;
+                top: parent.top;
+                right: parent.right;
             }
 
-            ColumnLayout {
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Math.round(units.gridUnit / 2)
 
-                Kirigami.Heading {
-                    id: connectionNameLabel
-                    Layout.alignment: Qt.AlignLeft
-                    level: 2
-                    elide: Text.ElideRight
-                    font.weight: model.ConnectionState == PlasmaNM.Enums.Activated ? Font.DemiBold : Font.Normal
-                    font.italic: model.ConnectionState == PlasmaNM.Enums.Activating ? true : false
-                    text: model.ItemUniqueName
-                    textFormat: Text.PlainText
+                Kirigami.Icon {
+                    id: connectionSvgIcon
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+                    Layout.preferredHeight: units.iconSizes.medium
+                    Layout.preferredWidth: units.iconSizes.medium
+                    color: Kirigami.Theme.textColor
+                    //elementId: model.ConnectionIcon
+                    source: "network-wireless-connected-100"
                 }
 
-                Kirigami.Heading {
-                    id: connectionStatusLabel
-                    Layout.alignment: Qt.AlignLeft
-                    level: 3
-                    elide: Text.ElideRight
-                    opacity: 0.6
-                    text: itemText()
+                ColumnLayout {
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
+                    Kirigami.Heading {
+                        id: connectionNameLabel
+                        Layout.alignment: Qt.AlignLeft
+                        level: 2
+                        elide: Text.ElideRight
+                        font.weight: model.ConnectionState == PlasmaNM.Enums.Activated ? Font.DemiBold : Font.Normal
+                        font.italic: model.ConnectionState == PlasmaNM.Enums.Activating ? true : false
+                        text: model.ItemUniqueName
+                        textFormat: Text.PlainText
+                    }
+
+                    Kirigami.Heading {
+                        id: connectionStatusLabel
+                        Layout.alignment: Qt.AlignLeft
+                        level: 3
+                        elide: Text.ElideRight
+                        opacity: 0.6
+                        text: itemText()
+                    }
                 }
             }
         }
     }
-}
 
     function itemText() {
         if (model.ConnectionState == PlasmaNM.Enums.Activating) {
@@ -121,9 +122,10 @@ Kirigami.AbstractListItem {
             handler.deactivateConnection(model.ConnectionPath, model.DevicePath)
         }
     }
-    
+
     onPressAndHold: {
         pathToRemove = model.ConnectionPath
+        nameToRemove = model.ItemUniqueName
         networkActions.open()
     }
 }

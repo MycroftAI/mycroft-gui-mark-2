@@ -80,6 +80,7 @@ MouseArea {
 
     property int startMouseY: -1
     property int startVolume: -1
+    preventStealing: false;
 
     drag.filterChildren: true
     drag.target: skillView
@@ -98,6 +99,8 @@ MouseArea {
             paSinkModel.preferredSink.volume = Math.max(PA.PulseAudio.MinimalVolume, Math.min(PA.PulseAudio.MaximalVolume, startVolume + (delta/height)*(PA.PulseAudio.MaximalVolume - PA.PulseAudio.MinimalVolume)))
             feedbackTimer.running = true;
             volSlider.show();
+        } else {
+            mouse.accepted = false;
         }
     }
     onReleased: mainParent.preventStealing = false;
@@ -183,15 +186,20 @@ MouseArea {
             bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
         }
 
-        NetworkingLoader {
-            anchors.fill: skillView
-            
-        }
         Controls.Button {
             anchors.centerIn: parent
             text: "start"
             visible: Mycroft.MycroftController.status == Mycroft.MycroftController.Closed
             onClicked: Mycroft.MycroftController.start();
+        }
+        MouseArea {
+            anchors.fill: skillView
+            preventStealing: true
+            visible: networkingLoader.active
+            NetworkingLoader {
+                id: networkingLoader
+                anchors.fill: parent
+            }
         }
     }
 }

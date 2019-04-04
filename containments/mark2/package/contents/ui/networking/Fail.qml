@@ -33,7 +33,7 @@ Item {
             id: failAnimation
             Layout.fillWidth: true
             Layout.fillHeight: true
-            source: Qt.resolvedUrl("Animations/fail.json")
+            source: Qt.resolvedUrl("animations/fail.json")
             loops: 0
             fillMode: Image.PreserveAspectFit
             running: true
