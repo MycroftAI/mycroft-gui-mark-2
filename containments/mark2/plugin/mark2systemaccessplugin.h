@@ -17,24 +17,17 @@
 
 #pragma once
 
+#include <QQmlExtensionPlugin> 
 
-#include <Plasma/Containment>
+class QQmlEngine;
 
-
-class MycroftMark2 : public Plasma::Containment
+class Mark2SystemAccessPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 
 public:
-    MycroftMark2( QObject *parent, const QVariantList &args );
-    ~MycroftMark2();
-
-public Q_SLOTS:
-    void executeCommand(const QString &command);
-
-    void requestShutdown();
-    void requestReboot();
-private:
-
+    void registerTypes(const char *uri);
+    
 };
 

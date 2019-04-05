@@ -15,17 +15,22 @@
  *
  */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
-import org.kde.kirigami 2.5 as Kirigami
-import Mycroft 1.0 as Mycroft
-import Mycroft.Private.Mark2SystemAccess 1.0
+#include "mark2systemaccessplugin.h"
+#include "mark2systemaccess.h"
+#include <QtQml>
 
-Delegate {
-    iconSource: "system-reboot"
-    text: i18n("Restart")
-    onClicked: {
-        Mark2SystemAccess.requestReboot();
-    }
+static QObject *systemaccess_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+
+    return Mark2SystemAccess::instance();
 }
+
+void Mark2SystemAccessPlugin::registerTypes(const char *uri)
+{
+    Q_ASSERT(QLatin1String(uri) == QLatin1String("Mycroft.Private.Mark2SystemAccess"));
+    qmlRegisterSingletonType<Mark2SystemAccess>(uri, 1, 0, "Mark2SystemAccess", systemaccess_singleton);
+}
+
 

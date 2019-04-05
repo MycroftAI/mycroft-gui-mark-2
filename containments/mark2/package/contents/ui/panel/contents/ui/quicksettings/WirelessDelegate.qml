@@ -18,13 +18,16 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 2.5 as Kirigami
-import Mycroft 1.0 as Mycroft
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
+
+import Mycroft 1.0 as Mycroft
+import Mycroft.Private.Mark2SystemAccess 1.0
 
 Delegate {
     iconSource: connectionIconProvider.connectionIcon
     text: i18n("Wireless Settings")
-    onClicked: Mycroft.MycroftController.sendRequest("mycroft.device.settings", {});
+    onClicked: Mark2SystemAccess.networkConfigurationVisible = true
+
 //BEGIN NetworkManager
     PlasmaNM.NetworkStatus {
         id: networkStatus
@@ -36,6 +39,16 @@ Delegate {
 
     PlasmaNM.Handler {
         id: handler
+    }
+    Timer {
+        id: showConnectionsTimer
+        running: true
+        interval: 2000
+        onTriggered: {
+            if (networkStatus.networkStatus == "Disconnected") {
+                Mark2SystemAccess.networkConfigurationVisible = true;
+            }
+        }
     }
 //END NetworkManager
 }

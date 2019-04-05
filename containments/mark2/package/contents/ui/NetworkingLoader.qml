@@ -1,5 +1,6 @@
 /*
- * Copyright 2018 by Marco Martin <mart@kde.org>
+ *  Copyright 2019 Marco Martin <mart@kde.org>
+ *  Copyright 2018 by Aditya Mehra <aix.m@outlook.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +16,19 @@
  *
  */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.4
+import QtQuick 2.4
+import QtQuick.Controls 2.0
 import org.kde.kirigami 2.5 as Kirigami
-import Mycroft 1.0 as Mycroft
 import Mycroft.Private.Mark2SystemAccess 1.0
 
-Delegate {
-    iconSource: "system-shutdown"
-    text: i18n("Turn Off")
-    onClicked: {
-        Mark2SystemAccess.requestShutdown();
-    }
+Loader {
+    id: networkingLoader
+    property var securityType
+    property var connectionName
+    property var devicePath
+    property var specificPath
+    
+    source: "./networking/SelectNetwork.qml"
+    active: Mark2SystemAccess.networkConfigurationVisible
 }
-

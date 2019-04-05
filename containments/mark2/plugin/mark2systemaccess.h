@@ -15,17 +15,33 @@
  *
  */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
-import org.kde.kirigami 2.5 as Kirigami
-import Mycroft 1.0 as Mycroft
-import Mycroft.Private.Mark2SystemAccess 1.0
+#pragma once
 
-Delegate {
-    iconSource: "system-reboot"
-    text: i18n("Restart")
-    onClicked: {
-        Mark2SystemAccess.requestReboot();
-    }
-}
+
+#include <QObject>
+
+
+class Mark2SystemAccess : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool networkConfigurationVisible MEMBER m_networkConfigurationVisible NOTIFY networkConfigurationVisibleChanged)
+
+public:
+    Mark2SystemAccess(QObject *parent=0);
+    ~Mark2SystemAccess();
+
+    static Mark2SystemAccess *instance();
+
+public Q_SLOTS:
+    void executeCommand(const QString &command);
+
+    void requestShutdown();
+    void requestReboot();
+
+Q_SIGNALS:
+    void networkConfigurationVisibleChanged();
+
+private:
+    bool m_networkConfigurationVisible = false;
+};
 
