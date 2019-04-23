@@ -25,6 +25,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
 
 import org.kde.plasma.private.volume 0.1 as PA
+import org.kde.lottie 1.0
 
 import "./panel/contents/ui" as Panel
 
@@ -137,17 +138,17 @@ MouseArea {
     }
 //END VirtualKeyboard
 
-        Image {
-            source: "background.png"
+        LottieAnimation {
+            anchors.centerIn: parent
+            width: Math.min(parent.width, parent.height)
+            height: width
+
+            source: Qt.resolvedUrl("thinking.json")
+
+            loops: Animation.Infinite
             fillMode: Image.PreserveAspectFit
-            anchors.fill: parent
-            opacity: !skillView.currentItem
-            Behavior on opacity {
-                OpacityAnimator {
-                    duration: Kirigami.Units.longDuration
-                    easing.type: Easing.InQuad
-                }
-            }
+            visible: running
+            running: !skillView.currentItem
         }
 
         Panel.SlidingPanel {
