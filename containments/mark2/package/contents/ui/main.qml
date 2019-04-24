@@ -59,83 +59,90 @@ Item {
     
 //END slots
 
-MouseArea {
-    id: mainParent
-
-    rotation: {
-        switch (plasmoid.configuration.rotation) {
-        case "CW":
-            return 90;
-        case "CCW":
-            return -90;
-        case "UD":
-            return 180;
-        case "NORMAL":
-        default:
-            return 0;
-        }
+    Rectangle {
+        anchors.fill: parent
+        z: mainParent.z + 1
+        // Avoid hiding everything completely
+        color: Qt.rgba(0, 0, 0, (1 - plasmoid.configuration.fakeBrightness) * 0.8)
     }
-    anchors.centerIn: parent
-    width: rotation == 0 || rotation == 180 ? parent.width : parent.height
-    height: rotation == 0 || rotation == 180 ? parent.height : parent.width
 
-    property int startMouseY: -1
-    property int startVolume: -1
-    preventStealing: false;
+    MouseArea {
+        id: mainParent
 
-    drag.filterChildren: true
-    drag.target: skillView
+        rotation: {
+            switch (plasmoid.configuration.rotation) {
+            case "CW":
+                return 90;
+            case "CCW":
+                return -90;
+            case "UD":
+                return 180;
+            case "NORMAL":
+            default:
+                return 0;
+            }
+        }
+        anchors.centerIn: parent
+        width: rotation == 0 || rotation == 180 ? parent.width : parent.height
+        height: rotation == 0 || rotation == 180 ? parent.height : parent.width
 
-    onPressed: {
-        if (networkingArea.visible) {
-            return;
+        property int startMouseY: -1
+        property int startVolume: -1
+        preventStealing: false;
+
+        drag.filterChildren: true
+        drag.target: skillView
+
+        onPressed: {
+            if (networkingArea.visible) {
+                return;
+            }
+            startVolume = paSinkModel.preferredSink.volume
+            startMouseY = mouse.y
         }
-        startVolume = paSinkModel.preferredSink.volume
-        startMouseY = mouse.y
-    }
-    onPositionChanged: {
-        if (networkingArea.visible) {
-            return;
+        onPositionChanged: {
+            if (networkingArea.visible) {
+                return;
+            }
+            var delta = startMouseY - mouse.y;
+            if (Math.abs(delta) > Kirigami.Units.gridUnit*2) {
+                mainParent.preventStealing = true
+            }
+            if (mainParent.preventStealing) {
+                //mouse.accepted = true;
+                paSinkModel.preferredSink.volume = Math.max(PA.PulseAudio.MinimalVolume, Math.min(PA.PulseAudio.MaximalVolume, startVolume + (delta/height)*(PA.PulseAudio.MaximalVolume - PA.PulseAudio.MinimalVolume)))
+                feedbackTimer.running = true;
+                volSlider.show();
+            } else {
+                mouse.accepted = false;
+            }
         }
-        var delta = startMouseY - mouse.y;
-        if (Math.abs(delta) > Kirigami.Units.gridUnit*2) {
-            mainParent.preventStealing = true
-        }
-        if (mainParent.preventStealing) {
-            //mouse.accepted = true;
-            paSinkModel.preferredSink.volume = Math.max(PA.PulseAudio.MinimalVolume, Math.min(PA.PulseAudio.MaximalVolume, startVolume + (delta/height)*(PA.PulseAudio.MaximalVolume - PA.PulseAudio.MinimalVolume)))
-            feedbackTimer.running = true;
-            volSlider.show();
-        } else {
-            mouse.accepted = false;
-        }
-    }
-    onReleased: mainParent.preventStealing = false;
-    onCanceled: mainParent.preventStealing = false;
-    
+        onReleased: mainParent.preventStealing = false;
+        onCanceled: mainParent.preventStealing = false;
+        
 
 //BEGIN PulseAudio
-    PA.SinkModel {
-        id: paSinkModel
-    }
-    PA.VolumeFeedback {
-        id: feedback
-    }
-    Timer {
-        id: feedbackTimer
-        interval: 250
-        onTriggered: feedback.play(paSinkModel.preferredSink.index);
-    }
-    VolumeFeedbackGraphics {
-        id: volSlider
-    }
+        PA.SinkModel {
+            id: paSinkModel
+        }
+        PA.VolumeFeedback {
+            id: feedback
+        }
+        Timer {
+            id: feedbackTimer
+            interval: 250
+            onTriggered: feedback.play(paSinkModel.preferredSink.index);
+        }
+        VolumeFeedbackGraphics {
+            id: volSlider
+        }
 //END PulseAudio
 
 //BEGIN VirtualKeyboard
-    VirtualKeyboardLoader {
-        id: virtualKeyboard
-        z: 1000
-    }
+        VirtualKeyboardLoader {
+            id: virtualKeyboard
+            z: 1000
+        }
 //END VirtualKeyboard
 
         LottieAnimation {

@@ -25,6 +25,7 @@ class Mark2SystemAccess : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool networkConfigurationVisible MEMBER m_networkConfigurationVisible NOTIFY networkConfigurationVisibleChanged)
+    Q_PROPERTY(qreal fakeBrightness MEMBER m_fakeBrightness NOTIFY fakeBrightnessChanged)
 
 public:
     Mark2SystemAccess(QObject *parent=0);
@@ -40,8 +41,10 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void networkConfigurationVisibleChanged();
+    void fakeBrightnessChanged();
 
 private:
     bool m_networkConfigurationVisible = false;
+    qreal m_fakeBrightness = 0.0;
 };
 
