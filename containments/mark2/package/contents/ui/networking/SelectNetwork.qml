@@ -20,7 +20,7 @@ import QtQuick 2.4
 import QtQuick.Controls 2.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kirigami 2.5 as Kirigami
+import org.kde.kirigami 2.8 as Kirigami
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 
 import Mycroft.Private.Mark2SystemAccess 1.0
@@ -189,12 +189,10 @@ Rectangle {
                 color: Kirigami.Theme.highlightColor
             }
 
-            PlasmaComponents.TextField {
+            Kirigami.PasswordField {
                 id: passField
 
                 Layout.fillWidth: true
-                echoMode: TextInput.Password
-                revealPasswordButtonShown: true
                 placeholderText: i18n("Password...")
                 validator: RegExpValidator {
                     regExp: if (securityType == PlasmaNM.Enums.StaticWep) {
@@ -222,6 +220,12 @@ Rectangle {
     Kirigami.OverlaySheet {
         id: networkActions
         parent: networkSelectionView
+
+        onSheetOpenChanged: {
+            if (sheetOpen) {
+                Qt.inputMethod.show();
+            }
+        }
 
         contentItem: ColumnLayout {
             implicitWidth: Kirigami.Units.gridUnit * 25
