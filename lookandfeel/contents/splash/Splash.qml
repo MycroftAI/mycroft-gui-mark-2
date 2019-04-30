@@ -17,6 +17,7 @@
 
 import QtQuick 2.5
 import QtQuick.Window 2.2
+import org.kde.lottie 1.0
 
 Rectangle {
     id: root
@@ -27,10 +28,9 @@ Rectangle {
     onStageChanged: {
         if (stage == 2) {
             introAnimation.running = true;
-        } else if (stage == 5) {
-            introAnimation.target = busyIndicator;
-            introAnimation.from = 1;
-            introAnimation.to = 0;
+        } else if (stage == 4) {
+            introAnimation.running = false;
+            introAnimation.loops = 1;
             introAnimation.running = true;
         }
     }
@@ -38,7 +38,6 @@ Rectangle {
     Item {
         id: content
         anchors.fill: parent
-        opacity: 0
         TextMetrics {
             id: units
             text: "M"
@@ -47,44 +46,19 @@ Rectangle {
             property int smallSpacing: Math.max(2, gridUnit/4)
         }
 
-        Image {
-            id: logo
-            //match SDDM/lockscreen avatar positioning
-            property real size: units.gridUnit * 8
-
+        LottieAnimation {
+            id: introAnimation
             anchors.centerIn: parent
+            width: Math.min(parent.width, parent.height)
+            height: width
+            rotation: 90
 
-            source: "images/logo.svg"
+            source: Qt.resolvedUrl("thinking.json")
 
-            sourceSize.width: size
-            sourceSize.height: size
+            loops: Animation.Infinite
+            fillMode: Image.PreserveAspectFit
+            visible: true
+            running: true
         }
-
-        Image {
-            id: busyIndicator
-            //in the middle of the remaining space
-            y: parent.height - (parent.height - logo.y) / 2 - height/2
-            anchors.horizontalCenter: parent.horizontalCenter
-            source: "images/busywidget.svgz"
-            sourceSize.height: units.gridUnit * 2
-            sourceSize.width: units.gridUnit * 2
-            RotationAnimator on rotation {
-                id: rotationAnimator
-                from: 0
-                to: 360
-                duration: 1500
-                loops: Animation.Infinite
-            }
-        }
-    }
-
-    OpacityAnimator {
-        id: introAnimation
-        running: false
-        target: content
-        from: 0
-        to: 1
-        duration: 1000
-        easing.type: Easing.InOutQuad
     }
 }

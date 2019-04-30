@@ -15,6 +15,12 @@
           UD: upside down 180 degrees
       </label>
     </entry>
+    <entry name="fakeBrightness" type="Double">
+      <default>1.0</default>
+      <label>
+          On devices that don't support hardware screen brightness this just dims the QML scene in software.
+      </label>
+    </entry>
   </group>
 
 </kcfg>

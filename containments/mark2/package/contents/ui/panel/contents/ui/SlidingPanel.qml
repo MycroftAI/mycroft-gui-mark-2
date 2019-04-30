@@ -51,6 +51,12 @@ Controls.Drawer {
 
         implicitWidth: layout.implicitWidth + Kirigami.Units.largeSpacing * 2
         implicitHeight: root.parent.height//layout.implicitHeight + Kirigami.Units.largeSpacing * 2
+        Rectangle {
+            anchors.fill: parent
+            z: flickable.z + 1
+            // Avoid hiding everything completely
+            color: Qt.rgba(0, 0, 0, (1 - plasmoid.configuration.fakeBrightness) * 0.8)
+        }
         Flickable {
             id: flickable
             anchors {

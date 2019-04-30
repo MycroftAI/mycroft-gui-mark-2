@@ -23,6 +23,7 @@ SliderBase {
 
     iconSource: Qt.resolvedUrl("./brightness-increase.svg")
 
+    /* NOTE: "proper" screen brightness, reenable if the hardware will support
     property int screenBrightness
     readonly property int maximumScreenBrightness: pmSource.data["PowerDevil"] ? pmSource.data["PowerDevil"]["Maximum Screen Brightness"] || 0 : 0
 
@@ -51,5 +52,12 @@ SliderBase {
     }
     slider.from: slider.to > 100 ? 1 : 0
     slider.to: root.maximumScreenBrightness
+*/
+    slider.value: plasmoid.configuration.fakeBrightness
+    slider.onMoved: {
+        plasmoid.configuration.fakeBrightness = slider.value;
+    }
+    slider.from: 0
+    slider.to: 1
 }
 
