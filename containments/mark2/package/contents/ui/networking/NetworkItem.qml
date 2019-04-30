@@ -54,7 +54,7 @@ Kirigami.AbstractListItem {
                     Layout.preferredWidth: units.iconSizes.medium
                     color: Kirigami.Theme.textColor
                     //elementId: model.ConnectionIcon
-                    source: "network-wireless-connected-100"
+                    source: itemSignalIcon(model.Signal)
                 }
 
                 ColumnLayout {
@@ -102,6 +102,20 @@ Kirigami.AbstractListItem {
             return result
         } else if (model.ConnectionState == PlasmaNM.Enums.Activated) {
                 return i18n("Connected")
+        }
+    }
+    
+    function itemSignalIcon(signalState) {
+        if (signalState <= 25){
+            return "network-wireless-connected-25"
+        } else if (signalState <= 50){
+            return "network-wireless-connected-50"
+        } else if (signalState <= 75){
+            return "network-wireless-connected-75"
+        } else if (signalState <= 100){
+            return "network-wireless-connected-100"
+        } else {
+            return "network-wireless-connected-00"
         }
     }
 

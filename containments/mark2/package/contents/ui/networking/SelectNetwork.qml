@@ -168,7 +168,8 @@ Rectangle {
     Kirigami.OverlaySheet {
         id: passwordSheet
         parent: networkSelectionView
-
+        showCloseButton: true
+        
         onSheetOpenChanged: {
             if (sheetOpen) {
                 passField.text = "";
@@ -220,6 +221,7 @@ Rectangle {
     Kirigami.OverlaySheet {
         id: networkActions
         parent: networkSelectionView
+        showCloseButton: true
 
         onSheetOpenChanged: {
             if (sheetOpen) {
