@@ -97,7 +97,7 @@ Item {
             if (networkingArea.visible) {
                 return;
             }
-            startVolume = paSinkModel.preferredSink.volume
+            startVolume = volSlider.value
             startMouseY = mouse.y
         }
         onPositionChanged: {
@@ -109,8 +109,8 @@ Item {
                 mainParent.preventStealing = true
             }
             if (mainParent.preventStealing) {
-                //mouse.accepted = true;
-                paSinkModel.preferredSink.volume = Math.max(PA.PulseAudio.MinimalVolume, Math.min(PA.PulseAudio.MaximalVolume, startVolume + (delta/height)*(PA.PulseAudio.MaximalVolume - PA.PulseAudio.MinimalVolume)))
+                var volume = Math.max(0, Math.min(1, startVolume + (delta/height)))
+                Mycroft.MycroftController.sendRequest("mycroft.volume.set", {"percent": volume});
                 feedbackTimer.running = true;
                 volSlider.show();
             } else {

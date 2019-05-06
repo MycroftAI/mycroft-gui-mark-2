@@ -20,14 +20,13 @@ import QtQuick.Layouts 1.1
 import QtQuick.Templates 2.2 as T
 import QtQuick.Controls 2.2 as Controls
 import org.kde.kirigami 2.5 as Kirigami
-import org.kde.plasma.private.volume 0.1 as PA
 import Mycroft 1.0 as Mycroft
 
 T.Slider {
     id: volSlider
     z: 100
-    from: PA.PulseAudio.MinimalVolume
-    to: PA.PulseAudio.MaximalVolume
+    from: 0
+    to: 1
     implicitWidth: Kirigami.Units.gridUnit * 4
 
     function show () {
@@ -36,7 +35,7 @@ T.Slider {
     }
 
     onMoved: {
-        paSinkModel.preferredSink.volume = value
+        Mycroft.MycroftController.sendRequest("mycroft.volume.set", {"percent": volSlider.value});
         feedbackTimer.running = true;
         show();
     }
@@ -83,7 +82,21 @@ T.Slider {
             height: volSlider.position * (volSlider.height - width) + width
         }
     }
-    value: paSinkModel.preferredSink ? paSinkModel.preferredSink.volume : PA.PulseAudio.MinimalVolume
+    value: 0
+
+    Connections {
+        target: Mycroft.MycroftController
+        onSocketStatusChanged: {
+            if (Mycroft.MycroftController.status == Mycroft.MycroftController.Open) {
+                Mycroft.MycroftController.sendRequest("mycroft.volume.get", {});
+            }
+        }
+        onSkillDataRecieved: {
+            if (type == "mycroft.volume.get.response") {
+                volSlider.value = data.percent;
+            }
+        }
+    }
 
     anchors {
         top: parent.top

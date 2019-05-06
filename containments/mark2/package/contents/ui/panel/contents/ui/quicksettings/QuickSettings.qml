@@ -57,6 +57,7 @@ ColumnLayout {
         HomeDelegate {}
         WirelessDelegate {}
         MuteDelegate {}
+        AdditionalSettingsDelegate {}
         RebootDelegate {}
         ShutdownDelegate {}
     }
