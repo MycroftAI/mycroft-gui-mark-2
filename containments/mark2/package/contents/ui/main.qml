@@ -211,7 +211,7 @@ Item {
             id: networkingArea
             anchors.fill: parent
 
-            visible: networkingLoader.active
+            visible: networkingLoader.enabled
 
             Kirigami.Theme.inherit: false
             Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
