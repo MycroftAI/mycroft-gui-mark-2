@@ -24,7 +24,7 @@ import org.kde.lottie 1.0
 
 Item {
     id: connectingView
-    anchors.fill: parent
+    //anchors.fill: parent
     property int connectedStatus 
     property int disconnectedStatus
     
@@ -47,7 +47,7 @@ Item {
         target: connectedStatus
         onConnectedStatusChanged: {
             if(connectedStatus == 1){
-                networkingLoader.source = "../networking/Success.qml"
+                networkingLoader.push(Qt.resolvedUrl("../networking/Success.qml"))
             }
         }
     }
@@ -56,7 +56,7 @@ Item {
         target: disconnectedStatus
         onDisconnectedStatusChanged: {
             if(disconnectedStatus == 1){
-                networkingLoader.source = "../networking/Fail.qml"
+                networkingLoader.push(Qt.resolvedUrl("../networking/Fail.qml"))
             }
         }
     }

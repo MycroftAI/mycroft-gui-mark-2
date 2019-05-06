@@ -22,13 +22,16 @@ import QtQuick.Controls 2.0
 import org.kde.kirigami 2.5 as Kirigami
 import Mycroft.Private.Mark2SystemAccess 1.0
 
-Loader {
+StackView {
     id: networkingLoader
     property var securityType
     property var connectionName
     property var devicePath
     property var specificPath
-    
-    source: "./networking/SelectNetwork.qml"
-    active: Mark2SystemAccess.networkConfigurationVisible
+
+    enabled: Mark2SystemAccess.networkConfigurationVisible
+    onEnabledChanged: {
+        networkingLoader.clear()
+        networkingLoader.push(Qt.resolvedUrl("./networking/SelectNetwork.qml"))
+    }
 }

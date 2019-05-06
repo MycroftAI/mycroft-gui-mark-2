@@ -28,7 +28,7 @@ import Mycroft.Private.Mark2SystemAccess 1.0
 Rectangle {
     id: networkSelectionView
 
-    anchors.fill: parent
+    //anchors.fill: parent
 
     Kirigami.Theme.inherit: false
     Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
@@ -37,6 +37,10 @@ Rectangle {
     property string pathToRemove
     property string nameToRemove
     property bool isStartUp: false
+    
+    Component.onCompleted:{
+        console.log(StackView.index)
+    }
 
     function removeConnection() {
         handler.removeConnection(pathToRemove)
@@ -145,7 +149,10 @@ Rectangle {
                     icon: "go-previous-symbolic"
                     text: i18n("Back")
                     Layout.preferredWidth: implicitWidth + height
-                    onClicked: Mark2SystemAccess.networkConfigurationVisible = false;
+                    onClicked: {
+                        networkingLoader.clear()
+                        Mark2SystemAccess.networkConfigurationVisible = false;
+                    }
                 }
                 Item {
                     Layout.fillWidth: true
@@ -174,6 +181,14 @@ Rectangle {
             if (sheetOpen) {
                 passField.text = "";
                 passField.forceActiveFocus();
+                if(securityType > PlasmaNM.Enums.UnknownSecurity){
+                    passField.text = "";
+                    passField.forceActiveFocus();
+                } else {
+                    passwordSheet.close()
+                    networkingLoader.push(Qt.resolvedUrl("Connecting.qml"))
+                    handler.addAndActivateConnection(devicePath, specificPath)
+                }
             }
         }
 
@@ -204,7 +219,7 @@ Rectangle {
                 }
 
                 onAccepted: {
-                    networkingLoader.source = "Connecting.qml"
+                    networkingLoader.push(Qt.resolvedUrl("Connecting.qml"))
                     handler.addAndActivateConnection(devicePath, specificPath, passField.text)
                 }
             }
