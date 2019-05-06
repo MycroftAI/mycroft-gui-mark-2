@@ -38,10 +38,6 @@ Rectangle {
     property string nameToRemove
     property bool isStartUp: false
     
-    Component.onCompleted:{
-        console.log(StackView.index)
-    }
-
     function removeConnection() {
         handler.removeConnection(pathToRemove)
     }

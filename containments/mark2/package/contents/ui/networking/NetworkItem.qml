@@ -120,9 +120,6 @@ Kirigami.AbstractListItem {
     }
 
     onClicked: {
-        console.log(model.ConnectionPath, model.DevicePath, model.SpecificPath)
-        console.log("security:")
-        console.log(model.SecurityType)
         if (!model.ConnectionPath) {
             networkingLoader.devicePath = model.DevicePath
             networkingLoader.specificPath = model.SpecificPath

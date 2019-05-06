@@ -40,7 +40,7 @@ Item {
 
             onRunningChanged: {
                 if (successAnimation.status == 1) {
-                    networkingLoader.pop(null) //= "SelectNetwork.qml"
+                    networkingLoader.pop(null)
                     Mark2SystemAccess.networkConfigurationVisible = false;
                 }
             }
