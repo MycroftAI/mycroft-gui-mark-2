@@ -32,6 +32,8 @@ StackView {
     enabled: Mark2SystemAccess.networkConfigurationVisible
     onEnabledChanged: {
         networkingLoader.clear()
-        networkingLoader.push(Qt.resolvedUrl("./networking/SelectNetwork.qml"))
+        if(Mark2SystemAccess.networkConfigurationVisible) {
+            networkingLoader.push(Qt.resolvedUrl("./networking/SelectNetwork.qml"))
+        }
     }
 }

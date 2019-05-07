@@ -40,11 +40,10 @@ Item {
 
             onRunningChanged: {
                 if (successAnimation.status == 1) {
-                    networkingLoader.pop(null)
+                    networkingLoader.clear()
                     Mark2SystemAccess.networkConfigurationVisible = false;
                 }
             }
         }
     }
 }
-
