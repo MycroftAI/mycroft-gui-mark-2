@@ -28,7 +28,7 @@ StackView {
     property var connectionName
     property var devicePath
     property var specificPath
-
+    visible: Mark2SystemAccess.networkConfigurationVisible
     enabled: Mark2SystemAccess.networkConfigurationVisible
     onEnabledChanged: {
         networkingLoader.clear()

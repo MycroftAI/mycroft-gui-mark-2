@@ -25,7 +25,6 @@ import Mycroft.Private.Mark2SystemAccess 1.0
 
 Item {
     id: failView
-    //anchors.fill: parent
     
     ColumnLayout {
         anchors.fill: parent

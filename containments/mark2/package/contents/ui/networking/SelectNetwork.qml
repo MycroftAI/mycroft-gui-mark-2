@@ -28,8 +28,6 @@ import Mycroft.Private.Mark2SystemAccess 1.0
 Rectangle {
     id: networkSelectionView
 
-    //anchors.fill: parent
-
     Kirigami.Theme.inherit: false
     Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
     color: Kirigami.Theme.backgroundColor

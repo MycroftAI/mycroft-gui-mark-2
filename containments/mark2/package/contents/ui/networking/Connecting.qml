@@ -24,7 +24,6 @@ import org.kde.lottie 1.0
 
 Item {
     id: connectingView
-    //anchors.fill: parent
     property int connectedStatus 
     property int disconnectedStatus
     
