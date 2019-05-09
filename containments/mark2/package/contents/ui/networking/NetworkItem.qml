@@ -120,7 +120,6 @@ Kirigami.AbstractListItem {
     }
 
     onClicked: {
-        console.log(model.ConnectionPath, model.DevicePath, model.SpecificPath)
         if (!model.ConnectionPath) {
             networkingLoader.devicePath = model.DevicePath
             networkingLoader.specificPath = model.SpecificPath
@@ -128,7 +127,7 @@ Kirigami.AbstractListItem {
             networkingLoader.securityType = model.SecurityType
             passwordSheet.open();
         } else if (model.ConnectionState == PlasmaNM.Enums.Deactivated) {
-            networkingLoader.source = "../networking/Connecting.qml"
+            networkingLoader.push(Qt.resolvedUrl("../networking/Connecting.qml"))
             handler.activateConnection(model.ConnectionPath, model.DevicePath, model.SpecificPath)
         } else {
             handler.deactivateConnection(model.ConnectionPath, model.DevicePath)
