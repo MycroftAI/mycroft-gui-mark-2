@@ -20,20 +20,33 @@ import QtQuick.Layouts 1.4
 import QtQuick 2.4
 import QtQuick.Controls 2.0
 import org.kde.kirigami 2.5 as Kirigami
+import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 import Mycroft.Private.Mark2SystemAccess 1.0
 
-StackView {
-    id: networkingLoader
-    property var securityType
-    property var connectionName
-    property var devicePath
-    property var specificPath
-    visible: Mark2SystemAccess.networkConfigurationVisible
-    enabled: Mark2SystemAccess.networkConfigurationVisible
-    onEnabledChanged: {
-        networkingLoader.clear()
-        if(Mark2SystemAccess.networkConfigurationVisible) {
-            networkingLoader.push(Qt.resolvedUrl("./networking/SelectNetwork.qml"))
+Item {
+    PlasmaNM.NetworkStatus {
+        id: nmStatus
+        onNetworkStatusChanged: {
+            if (nmStatus.networkStatus == "Disconnected") {
+                Mark2SystemAccess.networkConfigurationVisible = true;
+            }
+        }
+    }
+        
+    StackView {
+        id: networkingLoader
+        property var securityType
+        property var connectionName
+        property var devicePath
+        property var specificPath
+        anchors.fill: parent
+        visible: Mark2SystemAccess.networkConfigurationVisible
+        enabled: Mark2SystemAccess.networkConfigurationVisible
+        onEnabledChanged: {
+            networkingLoader.clear()
+            if(Mark2SystemAccess.networkConfigurationVisible) {
+                networkingLoader.push(Qt.resolvedUrl("./networking/SelectNetwork.qml"))
+            }
         }
     }
 }
