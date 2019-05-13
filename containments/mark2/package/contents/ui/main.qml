@@ -30,6 +30,7 @@ import org.kde.lottie 1.0
 import "./panel/contents/ui" as Panel
 
 import Mycroft 1.0 as Mycroft
+import Mycroft.Private.Mark2SystemAccess 1.0
 
 Item {
     id: root
@@ -211,7 +212,7 @@ Item {
             id: networkingArea
             anchors.fill: parent
 
-            visible: networkingLoader.enabled
+            visible: Mark2SystemAccess.networkConfigurationVisible
 
             Kirigami.Theme.inherit: false
             Kirigami.Theme.colorSet: Kirigami.Theme.Complementary

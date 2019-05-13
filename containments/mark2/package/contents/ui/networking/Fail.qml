@@ -39,8 +39,9 @@ Item {
             
             onRunningChanged: {
                 if(failAnimation.status == 1){
-                    networkingLoader.pop(null)
-                    Mark2SystemAccess.networkConfigurationVisible = true;//source = "../networking/SelectNetwork.qml"
+                    networkingLoader.pop("null")
+                    Mark2SystemAccess.networkConfigurationVisible = true
+                    networkingLoader.replace(Qt.resolvedUrl("../networking/SelectNetwork.qml"))
                 }
             }
         }    
