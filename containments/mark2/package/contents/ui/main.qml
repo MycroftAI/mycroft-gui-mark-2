@@ -151,6 +151,8 @@ Item {
             height: width
             fillMode: Image.PreserveAspectFit
             source: "thinking.gif";
+            paused: !visible
+            visible: !skillView.currentItem
         }
 
         Panel.SlidingPanel {
