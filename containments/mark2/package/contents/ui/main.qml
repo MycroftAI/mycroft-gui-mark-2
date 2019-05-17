@@ -25,7 +25,6 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
 
 import org.kde.plasma.private.volume 0.1 as PA
-import org.kde.lottie 1.0
 
 import "./panel/contents/ui" as Panel
 
@@ -146,17 +145,12 @@ Item {
         }
 //END VirtualKeyboard
 
-        LottieAnimation {
+        AnimatedImage {
             anchors.centerIn: parent
             width: Math.min(parent.width, parent.height)
             height: width
-
-            source: Qt.resolvedUrl("thinking.json")
-
-            loops: Animation.Infinite
             fillMode: Image.PreserveAspectFit
-            visible: running
-            running: !skillView.currentItem
+            source: "thinking.gif";
         }
 
         Panel.SlidingPanel {
