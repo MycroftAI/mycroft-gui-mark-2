@@ -25,7 +25,6 @@ import Mycroft.Private.Mark2SystemAccess 1.0
 
 Item {
     id: successView
-    anchors.fill: parent
 
     ColumnLayout {
         anchors.fill: parent
@@ -40,11 +39,10 @@ Item {
 
             onRunningChanged: {
                 if (successAnimation.status == 1) {
+                    networkingLoader.clear()
                     Mark2SystemAccess.networkConfigurationVisible = false;
-                    networkingLoader.source = "SelectNetwork.qml"
                 }
             }
         }
     }
 }
-

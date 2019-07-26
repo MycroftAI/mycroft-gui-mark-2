@@ -24,9 +24,9 @@ import org.kde.lottie 1.0
 
 Item {
     id: connectingView
-    anchors.fill: parent
     property int connectedStatus 
     property int disconnectedStatus
+    property bool connectionError: false
     
     PlasmaNM.NetworkStatus {
         id: networkStatus
@@ -42,12 +42,24 @@ Item {
             }
         }
     }
+
+    PlasmaNM.Handler {
+        id: handler
+    }
+    
+    Connections {
+        target: handler
+        onConnectionActivationFailed: {
+            connectionError = true
+        }
+    }
     
     Connections {
         target: connectedStatus
         onConnectedStatusChanged: {
             if(connectedStatus == 1){
-                networkingLoader.source = "../networking/Success.qml"
+                connectionError = false
+                networkingLoader.push(Qt.resolvedUrl("../networking/Success.qml"))
             }
         }
     }
@@ -55,8 +67,11 @@ Item {
     Connections {
         target: disconnectedStatus
         onDisconnectedStatusChanged: {
-            if(disconnectedStatus == 1){
-                networkingLoader.source = "../networking/Fail.qml"
+            if(disconnectedStatus == 1 && !connectionError){
+                networkingLoader.pop(null)
+                networkingLoader.push(Qt.resolvedUrl("../networking/Fail.qml"))
+            } else if(disconnectedStatus == 1 && connectionError){
+                networkingLoader.pop(null)
             }
         }
     }

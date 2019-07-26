@@ -21,11 +21,10 @@ import QtQuick.Controls 2.0
 import org.kde.kirigami 2.5 as Kirigami
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 import org.kde.lottie 1.0
-
+import Mycroft.Private.Mark2SystemAccess 1.0
 
 Item {
     id: failView
-    anchors.fill: parent
     
     ColumnLayout {
         anchors.fill: parent
@@ -40,7 +39,9 @@ Item {
             
             onRunningChanged: {
                 if(failAnimation.status == 1){
-                    networkingLoader.source = "../networking/SelectNetwork.qml"
+                    networkingLoader.pop("null")
+                    Mark2SystemAccess.networkConfigurationVisible = true
+                    networkingLoader.replace(Qt.resolvedUrl("../networking/SelectNetwork.qml"))
                 }
             }
         }    

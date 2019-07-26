@@ -25,11 +25,11 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
 
 import org.kde.plasma.private.volume 0.1 as PA
-import org.kde.lottie 1.0
 
 import "./panel/contents/ui" as Panel
 
 import Mycroft 1.0 as Mycroft
+import Mycroft.Private.Mark2SystemAccess 1.0
 
 Item {
     id: root
@@ -145,17 +145,14 @@ Item {
         }
 //END VirtualKeyboard
 
-        LottieAnimation {
+        AnimatedImage {
             anchors.centerIn: parent
             width: Math.min(parent.width, parent.height)
             height: width
-
-            source: Qt.resolvedUrl("thinking.json")
-
-            loops: Animation.Infinite
             fillMode: Image.PreserveAspectFit
-            visible: running
-            running: !skillView.currentItem
+            source: "thinking.gif";
+            paused: !visible
+            visible: !skillView.currentItem
         }
 
         Panel.SlidingPanel {
@@ -211,7 +208,7 @@ Item {
             id: networkingArea
             anchors.fill: parent
 
-            visible: networkingLoader.active
+            visible: Mark2SystemAccess.networkConfigurationVisible
 
             Kirigami.Theme.inherit: false
             Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
