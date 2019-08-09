@@ -145,13 +145,9 @@ Item {
         }
 //END VirtualKeyboard
 
-        AnimatedImage {
+        Controls.BusyIndicator {
             anchors.centerIn: parent
-            width: Math.min(parent.width, parent.height)
-            height: width
-            fillMode: Image.PreserveAspectFit
-            source: "thinking.gif";
-            paused: !visible
+            running: visible
             visible: !skillView.currentItem
         }
 
@@ -175,10 +171,10 @@ Item {
             //HACK for rotation
             contentItem.rotation: mainParent.rotation
             contentItem.transform: Translate {
-                x: root.width/2 - panel.contentItem.width/2
+                x: (mainParent.rotation == -90 ? 1 : -1) * (root.width/2 - panel.contentItem.width/2)
                 y: root.height/2 - panel.contentItem.height/2
             }
-            dragMargin: Kirigami.Units.gridUnit * 2
+            dragMargin: Kirigami.Units.gridUnit * 3
             dim: true
         }
         Rectangle {
