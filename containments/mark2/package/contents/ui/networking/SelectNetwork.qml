@@ -166,23 +166,43 @@ Rectangle {
         }
     }
 
-    Kirigami.OverlaySheet {
-        id: passwordSheet
-        parent: networkSelectionView
-        showCloseButton: true
+    Control {
+        id: passwordLayer
+        anchors.fill: parent
+        z: 999999
+        opacity: 0
+        enabled: opacity > 0
         
-        onSheetOpenChanged: {
-            if (sheetOpen) {
+        function open() {
+            passField.text = "";
+            passField.forceActiveFocus();
+            if (securityType > PlasmaNM.Enums.UnknownSecurity) {
                 passField.text = "";
                 passField.forceActiveFocus();
-                if(securityType > PlasmaNM.Enums.UnknownSecurity){
-                    passField.text = "";
-                    passField.forceActiveFocus();
-                } else {
-                    passwordSheet.close()
-                    networkingLoader.push(Qt.resolvedUrl("Connecting.qml"))
-                    handler.addAndActivateConnection(devicePath, specificPath)
-                }
+            } else {
+                close();
+                networkingLoader.push(Qt.resolvedUrl("Connecting.qml"));
+                handler.addAndActivateConnection(devicePath, specificPath);
+            }
+            opacity = 1;
+        }
+
+        function close() {
+            opacity = 0;
+            passField.text = "";
+        }
+
+        Behavior on opacity {
+            OpacityAnimator {
+                duration: Kirigami.Units.longDuration
+                easing.type: Easing.InOutQuad
+            }
+        }
+        background: Rectangle {
+            color: Qt.rgba(0, 0, 0, 0.8)
+            MouseArea {
+                anchors.fill: parent
+                onClicked: passwordLayer.close()
             }
         }
 
@@ -215,14 +235,27 @@ Rectangle {
                 onAccepted: {
                     networkingLoader.push(Qt.resolvedUrl("Connecting.qml"))
                     handler.addAndActivateConnection(devicePath, specificPath, passField.text)
+                    passwordLayer.close();
                 }
             }
 
-            Button {
+            RowLayout {
                 Layout.fillWidth: true
-                text: i18n("Connect")
+                Button {
+                    Layout.fillWidth: true
+                    text: i18n("Connect")
 
-                onClicked: passField.accepted();
+                    onClicked: passField.accepted();
+                }
+                Button {
+                    Layout.fillWidth: true
+                    text: i18n("Cancel")
+
+                    onClicked: passwordLayer.close();
+                }
+            }
+            Item {
+                Layout.fillHeight: true
             }
         }
     }

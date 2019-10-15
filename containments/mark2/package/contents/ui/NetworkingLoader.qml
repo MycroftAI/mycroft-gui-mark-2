@@ -26,13 +26,18 @@ import Mycroft.Private.Mark2SystemAccess 1.0
 Item {
     PlasmaNM.NetworkStatus {
         id: nmStatus
+        property bool automaticLoad
         onNetworkStatusChanged: {
             if (nmStatus.networkStatus == "Disconnected") {
                 Mark2SystemAccess.networkConfigurationVisible = true;
+                automaticLoad = true;
+            } else if (automaticLoad && nmStatus.networkStatus == "Connected") {
+                Mark2SystemAccess.networkConfigurationVisible = false;
+                automaticLoad = false;
             }
         }
     }
-        
+
     StackView {
         id: networkingLoader
         property var securityType

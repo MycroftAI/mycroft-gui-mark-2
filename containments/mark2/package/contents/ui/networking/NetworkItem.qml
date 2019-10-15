@@ -125,7 +125,7 @@ Kirigami.AbstractListItem {
             networkingLoader.specificPath = model.SpecificPath
             networkingLoader.connectionName = connectionNameLabel.text
             networkingLoader.securityType = model.SecurityType
-            passwordSheet.open();
+            passwordLayer.open();
         } else if (model.ConnectionState == PlasmaNM.Enums.Deactivated) {
             networkingLoader.push(Qt.resolvedUrl("../networking/Connecting.qml"))
             handler.activateConnection(model.ConnectionPath, model.DevicePath, model.SpecificPath)
