@@ -21,101 +21,142 @@ import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
+import QtQml.StateMachine 1.0 as DSM
 import "quicksettings"
 
-Controls.Drawer {
+PlasmaCore.ColorScope {
     id: root
-    edge: Qt.TopEdge
-
-    property bool peeking: false
-
-    property Item bottomItem
-
-    interactive: position < 1 || flickable.atYEnd
-    onBottomItemChanged: {
-        bottomItem.parent = contentArea;
-        bottomItem.anchors.fill = contentArea;
-    }
-
-    onVisibleChanged: {
-        if (!visible) {
-            flickable.contentY = 0;
-        }
-    }
-    opacity: position
-
     Kirigami.Theme.colorSet: Kirigami.Theme.View
-    contentItem: PlasmaCore.ColorScope {
-        Kirigami.Theme.colorSet: Kirigami.Theme.View
-        colorGroup: PlasmaCore.Theme.ViewColorGroup
+    colorGroup: PlasmaCore.Theme.ViewColorGroup
 
-        implicitWidth: layout.implicitWidth + Kirigami.Units.largeSpacing * 2
-        implicitHeight: root.parent.height//layout.implicitHeight + Kirigami.Units.largeSpacing * 2
-        Rectangle {
-            anchors.fill: parent
-            z: flickable.z + 1
-            // Avoid hiding everything completely
-            color: Qt.rgba(0, 0, 0, (1 - plasmoid.configuration.fakeBrightness) * 0.8)
-        }
-        Flickable {
-            id: flickable
-            anchors {
-                fill: parent
-                margins: Kirigami.Units.largeSpacing * 2
+    readonly property real position: 1 - flickable.contentY / root.contentHeight
+
+    readonly property real contentHeight: quickSettings.height + layout.anchors.margins * 2
+    state: "closed"
+
+    Rectangle {
+        anchors.fill:parent
+        color: "black"
+        opacity: root.position * 0.8
+        visible: root.position > 0
+    }
+
+    DSM.StateMachine {
+        id: stateMachine
+        initialState: closed
+        running: true
+        DSM.State {
+            id: closed
+            DSM.SignalTransition {
+                targetState: opening
+                signal: flickable.openRequested
             }
+            onEntered: root.state = "closed"
+        }
+        DSM.State {
+            id: opening
+            DSM.TimeoutTransition {
+                targetState: open
+                timeout: Kirigami.Units.longDuration + 1
+            }
+            onEntered: root.state = "opening"
+        }
+        DSM.State {
+            id: open
+            DSM.SignalTransition {
+                targetState: closed
+                signal: flickable.closeRequested
+            }
+            onEntered: root.state = "open"
+        }
+    }
 
-            boundsBehavior: Flickable.StopAtBounds
-            contentWidth: width
-            contentHeight: layout.height
+    states: [
+        State {
+            name: "dragging"
+           // when: flickable.dragging || flickable.flicking
+            PropertyChanges {
+                target: flickable
+                contentY: flickable.contentY
+            }
+        },
+        State {
+            name: "closed"
+            PropertyChanges {
+                target: flickable
+                contentY: root.contentHeight
+            }
+        },
+        State {
+            name: "opening"
+            PropertyChanges {
+                target: flickable
+                contentY: 0
+            }
+        },
+        State {
+            name: "open"
+            PropertyChanges {
+                target: flickable
+                contentY: Math.min(flickable.contentY, root.contentHeight - root.height)
+            }
+        }
+    ]
+    transitions: Transition {
+        NumberAnimation {
+            target: flickable
+            property: "contentY"
+            duration: Kirigami.Units.longDuration
+        }
+    }
+
+    Flickable {
+        id: flickable
+        anchors.fill: parent
+
+        boundsBehavior: Flickable.StopAtBounds
+        contentWidth: width
+        contentHeight: flickableContents.implicitHeight
+
+        signal openRequested
+        signal closeRequested
+
+        onFlickStarted: movementStarted()
+        onFlickEnded: movementEnded()
+        onMovementStarted: root.state = "dragging"
+        onMovementEnded: {
+            if (open.active && contentY <= root.contentHeight - root.height / 2) {print("primo caso")
+                root.state = "open"
+            } else if (contentY > root.contentHeight - root.height / 2) {print("close")
+                closeRequested();
+                root.state = "closed";
+            } else {print("open")
+                openRequested();
+            }
+        }
+        MouseArea {
+            id: flickableContents
+            width: parent.width
+            implicitHeight: layout.implicitHeight + layout.anchors.margins * 2
+
             ColumnLayout {
                 id: layout
+                spacing: 0
 
-                width: parent.width
+                anchors {
+                    fill: parent
+                    margins: Kirigami.Units.largeSpacing * 2
+                }
                 QuickSettings {
+                    id: quickSettings
                     Layout.fillWidth: true
-                    drawer: root
                     onDelegateClicked: root.close();
                 }
                 Item {
-                    id: contentArea
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: root.bottomItem ? root.bottomItem.implicitHeight : 0
-                }
-            }
-        }
-    }
-    background: Item {}
-
-    onPeekingChanged:  {
-        if (peeking) {
-            root.enter.enabled = false;
-            root.exit.enabled = false;
-            visible = true;
-        } else {
-            positionResetAnim.to = position > 0.5 ? 1 : 0;
-            positionResetAnim.running = true
-            root.enter.enabled = true;
-            root.exit.enabled = true;
-        }
-    }
-    SequentialAnimation {
-        id: positionResetAnim
-        property alias to: internalAnim.to
-        NumberAnimation {
-            id: internalAnim
-            target: root
-            to: 0
-            property: "position"
-            duration: (root.position)*Kirigami.Units.longDuration
-        }
-        ScriptAction {
-            script: {
-                if (internalAnim.to == 0) {
-                    root.close();
-                } else {
-                    root.open();
+                    Layout.minimumHeight: root.height
                 }
             }
         }
     }
 }
+

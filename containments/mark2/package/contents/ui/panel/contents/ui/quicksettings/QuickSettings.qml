@@ -33,7 +33,6 @@ ColumnLayout {
     }
 
     spacing: units.largeSpacing
-    property Controls.Drawer drawer
 
     RowLayout {
         Layout.fillWidth: true

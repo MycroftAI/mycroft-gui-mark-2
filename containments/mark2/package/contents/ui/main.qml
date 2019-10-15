@@ -151,38 +151,20 @@ Item {
             visible: !skillView.currentItem
         }
 
-        Panel.SlidingPanel {
-            id: panel
+        Item {
             z: 999
-            width: mainParent.width
-            height: mainParent.height
-            edge: {
-                switch (mainParent.rotation) {
-                case -90:
-                    return Qt.LeftEdge;
-                case 90:
-                    return Qt.RightEdge;
-                case 180: return Qt.BottomEdge;
-                case 0:
-                default:
-                    return Qt.TopEdge;
-                }
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
             }
-            //HACK for rotation
-            contentItem.rotation: mainParent.rotation
-            contentItem.transform: Translate {
-                x: (mainParent.rotation == -90 ? 1 : -1) * (root.width/2 - panel.contentItem.width/2)
-                y: root.height/2 - panel.contentItem.height/2
+            height: Kirigami.Units.gridUnit
+            clip: panel.position <= 0
+            Panel.SlidingPanel {
+                id: panel
+                width: mainParent.width
+                height: mainParent.height
             }
-            dragMargin: Kirigami.Units.gridUnit * 3
-            dim: true
-        }
-        Rectangle {
-            z: 998
-            anchors.fill:parent
-            color: "black"
-            opacity: panel.position * 0.8
-            visible: panel.position > 0
         }
 
         Mycroft.SkillView {
