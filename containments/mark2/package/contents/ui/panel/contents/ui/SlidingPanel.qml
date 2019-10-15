@@ -34,6 +34,13 @@ PlasmaCore.ColorScope {
     readonly property real contentHeight: quickSettings.height + layout.anchors.margins * 2
     state: "closed"
 
+    function open() {
+        flickable.openRequested();
+    }
+    function close() {
+        flickable.closeRequested();
+    }
+
     Rectangle {
         anchors.fill:parent
         color: "black"
