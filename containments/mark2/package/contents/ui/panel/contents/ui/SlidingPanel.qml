@@ -21,7 +21,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
-import QtQml.StateMachine 1.0 as DSM
 import "quicksettings"
 
 PlasmaCore.ColorScope {
@@ -29,7 +28,7 @@ PlasmaCore.ColorScope {
     Kirigami.Theme.colorSet: Kirigami.Theme.View
     colorGroup: PlasmaCore.Theme.ViewColorGroup
 
-    readonly property real position: 1 - flickable.contentY / root.contentHeight
+    readonly property real position: 1 - (flickable.contentY - contentHeight + height) / height
 
     readonly property real contentHeight: quickSettings.height + layout.anchors.margins * 2
     state: "closed"
@@ -44,76 +43,58 @@ PlasmaCore.ColorScope {
     Rectangle {
         anchors.fill:parent
         color: "black"
-        opacity: root.position * 0.8
+        opacity: Math.min(1, root.position) * 0.8
         visible: root.position > 0
     }
 
-    DSM.StateMachine {
-        id: stateMachine
-        initialState: closed
-        running: true
-        DSM.State {
-            id: closed
-            DSM.SignalTransition {
-                targetState: opening
-                signal: flickable.openRequested
-            }
-            onEntered: root.state = "closed"
-        }
-        DSM.State {
-            id: opening
-            DSM.TimeoutTransition {
-                targetState: open
-                timeout: Kirigami.Units.longDuration + 1
-            }
-            onEntered: root.state = "opening"
-        }
-        DSM.State {
-            id: open
-            DSM.SignalTransition {
-                targetState: closed
-                signal: flickable.closeRequested
-            }
-            onEntered: root.state = "open"
-        }
-    }
-
-    states: [
-        State {
-            name: "dragging"
-           // when: flickable.dragging || flickable.flicking
-            PropertyChanges {
-                target: flickable
-                contentY: flickable.contentY
-            }
-        },
-        State {
-            name: "closed"
-            PropertyChanges {
-                target: flickable
-                contentY: root.contentHeight
-            }
-        },
-        State {
-            name: "opening"
-            PropertyChanges {
-                target: flickable
-                contentY: 0
-            }
-        },
-        State {
-            name: "open"
-            PropertyChanges {
-                target: flickable
-                contentY: Math.min(flickable.contentY, root.contentHeight - root.height)
-            }
-        }
-    ]
-    transitions: Transition {
+    SequentialAnimation {
+        id: openAnim
         NumberAnimation {
             target: flickable
             property: "contentY"
+            from: flickable.contentY
+            to: 0
             duration: Kirigami.Units.longDuration
+            easing.type: Easing.InOutQuad
+        }
+        PropertyAction {
+            target: flickable
+            property: "open"
+            value: true
+        }
+    }
+
+    SequentialAnimation {
+        id: closeAnim
+        NumberAnimation {
+            target: flickable
+            property: "contentY"
+            from: flickable.contentY
+            to: root.contentHeight
+            duration: Kirigami.Units.longDuration
+            easing.type: Easing.InOutQuad
+        }
+        PropertyAction {
+            target: flickable
+            property: "open"
+            value: false
+        }
+    }
+
+    SequentialAnimation {
+        id: snapAnim
+        NumberAnimation {
+            target: flickable
+            property: "contentY"
+            from: flickable.contentY
+            to: root.contentHeight - root.height
+            duration: Kirigami.Units.longDuration
+            easing.type: Easing.InOutQuad
+        }
+        PropertyAction {
+            target: flickable
+            property: "open"
+            value: true
         }
     }
 
@@ -121,24 +102,31 @@ PlasmaCore.ColorScope {
         id: flickable
         anchors.fill: parent
 
+        contentY: root.contentHeight
         boundsBehavior: Flickable.StopAtBounds
         contentWidth: width
         contentHeight: flickableContents.implicitHeight
 
+        property bool open: false
         signal openRequested
         signal closeRequested
 
         onFlickStarted: movementStarted()
         onFlickEnded: movementEnded()
         onMovementStarted: root.state = "dragging"
-        onMovementEnded: {
-            if (open.active && contentY <= root.contentHeight - root.height / 2) {print("primo caso")
-                root.state = "open"
-            } else if (contentY > root.contentHeight - root.height / 2) {print("close")
-                closeRequested();
-                root.state = "closed";
-            } else {print("open")
-                openRequested();
+        onMovementEnded: {print(open)
+            if (root.position < 0.5) {print("CLOSE")
+                openAnim.running = false;
+                snapAnim.running = false;
+                closeAnim.restart();
+            } else if (open && root.position < 1) {print("SNAP")
+                openAnim.running = false;
+                closeAnim.running = false;
+                snapAnim.restart();
+            } else if (!open && root.position >= 0.5) {print("OPEN")
+                closeAnim.running = false;
+                snapAnim.running = false;
+                openAnim.restart();
             }
         }
         MouseArea {
