@@ -26,8 +26,16 @@ import Mycroft.Private.Mark2SystemAccess 1.0
 Item {
     PlasmaNM.NetworkStatus {
         id: nmStatus
+        onNetworkStatusChanged: loaderTimer.restart();
+    }
+
+    Component.onCompleted: loaderTimer.restart();
+
+    Timer {
+        id: loaderTimer
+        interval: 1000
         property bool automaticLoad
-        onNetworkStatusChanged: {
+        onTriggered: {
             if (nmStatus.networkStatus == "Disconnected") {
                 Mark2SystemAccess.networkConfigurationVisible = true;
                 automaticLoad = true;
