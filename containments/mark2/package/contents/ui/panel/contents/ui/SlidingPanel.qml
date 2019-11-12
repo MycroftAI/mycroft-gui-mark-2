@@ -35,9 +35,11 @@ PlasmaCore.ColorScope {
 
     function open() {
         flickable.openRequested();
+        openAnim.restart();
     }
     function close() {
         flickable.closeRequested();
+        closeAnim.restart();
     }
 
     Rectangle {
