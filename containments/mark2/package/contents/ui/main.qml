@@ -151,22 +151,6 @@ Item {
             visible: !skillView.currentItem
         }
 
-        Item {
-            z: 999
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: parent.top
-            }
-            height: Kirigami.Units.gridUnit
-            clip: panel.position <= 0
-            Panel.SlidingPanel {
-                id: panel
-                width: mainParent.width
-                height: mainParent.height
-            }
-        }
-
         Mycroft.SkillView {
             id: skillView
             anchors.fill: parent
@@ -204,6 +188,21 @@ Item {
                     anchors.fill: parent
                 }
             }
+        }
+    }
+    Item {
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+        }
+        rotation: mainParent.rotation
+        height: Kirigami.Units.gridUnit
+        clip: panel.position <= 0
+        Panel.SlidingPanel {
+            id: panel
+            width: mainParent.width
+            height: mainParent.height
         }
     }
 }
