@@ -1,7 +1,7 @@
 [kdeglobals][KDE]
 widgetStyle=breeze
 
-[Desktop][org.kde.plasma.mini]
+[Desktop][org.kde.plasma.nano]
 Containment=org.kde.mycroft.mark2
 
 [kdeglobals][General]
