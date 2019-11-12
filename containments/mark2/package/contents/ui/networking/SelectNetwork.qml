@@ -224,7 +224,7 @@ Rectangle {
 
             Kirigami.PasswordField {
                 id: passField
-
+                Kirigami.Theme.colorSet: Kirigami.Theme.View
                 Layout.fillWidth: true
                 placeholderText: i18n("Password...")
                 validator: RegExpValidator {
