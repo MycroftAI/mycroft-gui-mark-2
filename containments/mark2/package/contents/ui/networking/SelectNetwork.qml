@@ -172,6 +172,8 @@ Rectangle {
         z: 999999
         opacity: 0
         enabled: opacity > 0
+        leftPadding: Kirigami.Units.gridUnit
+        rightPadding: Kirigami.Units.gridUnit
         
         function open() {
             passField.text = "";
@@ -208,6 +210,7 @@ Rectangle {
 
         contentItem: ColumnLayout {
             implicitWidth: Kirigami.Units.gridUnit * 25
+            spacing: Kirigami.Units.gridUnit
 
             Kirigami.Heading {
                 level: 1
@@ -239,18 +242,16 @@ Rectangle {
                 }
             }
 
-            RowLayout {
-                Layout.fillWidth: true
+            ColumnLayout {
+                Layout.alignment: Qt.AlignCenter
                 Button {
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: passField.width / 4 * 3
                     text: i18n("Connect")
-
                     onClicked: passField.accepted();
                 }
                 Button {
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: passField.width / 4 * 3
                     text: i18n("Cancel")
-
                     onClicked: passwordLayer.close();
                 }
             }
