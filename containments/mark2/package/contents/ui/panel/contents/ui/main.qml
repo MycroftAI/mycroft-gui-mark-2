@@ -89,8 +89,6 @@ PlasmaCore.ColorScope {
     Component {
         id: appletContainerComponent
         Item {
-            //not used yet
-            property bool animationsEnabled: false
             property Item applet
             Layout.fillHeight: true
             Layout.minimumWidth: applet && applet.compactRepresentationItem ? Math.max(applet.compactRepresentationItem.Layout.minimumWidth, appletIconsRow.height) : appletIconsRow.height
@@ -152,12 +150,11 @@ PlasmaCore.ColorScope {
         }
     }
 
-
-        SlidingPanel {
-            id: slidingPanel
-            width: parent.width
-            height: parent.height
-            bottomItem: Item {}
-        }
+    SlidingPanel {
+        id: slidingPanel
+        width: parent.width
+        height: parent.height
+        bottomItem: Item {}
+    }
 
 }
