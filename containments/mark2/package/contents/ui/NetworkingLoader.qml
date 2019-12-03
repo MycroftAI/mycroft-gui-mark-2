@@ -29,6 +29,14 @@ Item {
         onNetworkStatusChanged: loaderTimer.restart();
     }
 
+    PlasmaNM.NetworkModel {
+        id: connectionModel
+    }
+
+    PlasmaNM.Handler {
+        id: handler
+    }
+
     Component.onCompleted: loaderTimer.restart();
 
     Timer {
