@@ -23,99 +23,137 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
 import "quicksettings"
 
-Controls.Drawer {
+PlasmaCore.ColorScope {
     id: root
-    edge: Qt.TopEdge
-
-    property bool peeking: false
-
-    property Item bottomItem
-
-    interactive: position < 1 || flickable.atYEnd
-    onBottomItemChanged: {
-        bottomItem.parent = contentArea;
-        bottomItem.anchors.fill = contentArea;
-    }
-
-    onVisibleChanged: {
-        if (!visible) {
-            flickable.contentY = 0;
-        }
-    }
-    opacity: position
-
     Kirigami.Theme.colorSet: Kirigami.Theme.View
-    contentItem: PlasmaCore.ColorScope {
-        Kirigami.Theme.colorSet: Kirigami.Theme.View
-        colorGroup: PlasmaCore.Theme.ViewColorGroup
+    colorGroup: PlasmaCore.Theme.ViewColorGroup
 
-        implicitWidth: layout.implicitWidth + Kirigami.Units.largeSpacing * 2
-        implicitHeight: root.parent.height//layout.implicitHeight + Kirigami.Units.largeSpacing * 2
-        Rectangle {
-            anchors.fill: parent
-            z: flickable.z + 1
-            // Avoid hiding everything completely
-            color: Qt.rgba(0, 0, 0, (1 - plasmoid.configuration.fakeBrightness) * 0.8)
+    readonly property real position: 1 - (flickable.contentY - contentHeight + height) / height
+
+    readonly property real contentHeight: quickSettings.height + layout.anchors.margins * 2
+    state: "closed"
+
+    function open() {
+        flickable.openRequested();
+        openAnim.restart();
+    }
+    function close() {
+        flickable.closeRequested();
+        closeAnim.restart();
+    }
+
+    Rectangle {
+        anchors.fill:parent
+        color: "black"
+        opacity: Math.min(1, root.position) * 0.8
+        visible: root.position > 0
+    }
+
+    SequentialAnimation {
+        id: openAnim
+        NumberAnimation {
+            target: flickable
+            property: "contentY"
+            from: flickable.contentY
+            to: 0
+            duration: Kirigami.Units.longDuration
+            easing.type: Easing.InOutQuad
         }
-        Flickable {
-            id: flickable
-            anchors {
-                fill: parent
-                margins: Kirigami.Units.largeSpacing * 2
-            }
+        PropertyAction {
+            target: flickable
+            property: "open"
+            value: true
+        }
+    }
 
-            boundsBehavior: Flickable.StopAtBounds
-            contentWidth: width
-            contentHeight: layout.height
+    SequentialAnimation {
+        id: closeAnim
+        NumberAnimation {
+            target: flickable
+            property: "contentY"
+            from: flickable.contentY
+            to: root.contentHeight
+            duration: Kirigami.Units.longDuration
+            easing.type: Easing.InOutQuad
+        }
+        PropertyAction {
+            target: flickable
+            property: "open"
+            value: false
+        }
+    }
+
+    SequentialAnimation {
+        id: snapAnim
+        NumberAnimation {
+            target: flickable
+            property: "contentY"
+            from: flickable.contentY
+            to: root.contentHeight - root.height
+            duration: Kirigami.Units.longDuration
+            easing.type: Easing.InOutQuad
+        }
+        PropertyAction {
+            target: flickable
+            property: "open"
+            value: true
+        }
+    }
+
+    Flickable {
+        id: flickable
+        anchors.fill: parent
+
+        contentY: root.contentHeight
+        boundsBehavior: Flickable.StopAtBounds
+        contentWidth: width
+        contentHeight: flickableContents.implicitHeight
+
+        property bool open: false
+        signal openRequested
+        signal closeRequested
+
+        onFlickStarted: movementStarted()
+        onFlickEnded: movementEnded()
+        onMovementStarted: root.state = "dragging"
+        onMovementEnded: {print(open)
+            if (root.position < 0.5) {print("CLOSE")
+                openAnim.running = false;
+                snapAnim.running = false;
+                closeAnim.restart();
+            } else if (open && root.position < 1) {print("SNAP")
+                openAnim.running = false;
+                closeAnim.running = false;
+                snapAnim.restart();
+            } else if (!open && root.position >= 0.5) {print("OPEN")
+                closeAnim.running = false;
+                snapAnim.running = false;
+                openAnim.restart();
+            }
+        }
+        MouseArea {
+            id: flickableContents
+            width: parent.width
+            implicitHeight: layout.implicitHeight + layout.anchors.margins * 2
+
             ColumnLayout {
                 id: layout
+                spacing: 0
 
-                width: parent.width
+                anchors {
+                    fill: parent
+                    margins: Kirigami.Units.largeSpacing * 2
+                }
                 QuickSettings {
+                    id: quickSettings
                     Layout.fillWidth: true
-                    drawer: root
                     onDelegateClicked: root.close();
                 }
                 Item {
-                    id: contentArea
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: root.bottomItem ? root.bottomItem.implicitHeight : 0
-                }
-            }
-        }
-    }
-    background: Item {}
-
-    onPeekingChanged:  {
-        if (peeking) {
-            root.enter.enabled = false;
-            root.exit.enabled = false;
-            visible = true;
-        } else {
-            positionResetAnim.to = position > 0.5 ? 1 : 0;
-            positionResetAnim.running = true
-            root.enter.enabled = true;
-            root.exit.enabled = true;
-        }
-    }
-    SequentialAnimation {
-        id: positionResetAnim
-        property alias to: internalAnim.to
-        NumberAnimation {
-            id: internalAnim
-            target: root
-            to: 0
-            property: "position"
-            duration: (root.position)*Kirigami.Units.longDuration
-        }
-        ScriptAction {
-            script: {
-                if (internalAnim.to == 0) {
-                    root.close();
-                } else {
-                    root.open();
+                    Layout.minimumHeight: root.height
                 }
             }
         }
     }
 }
+

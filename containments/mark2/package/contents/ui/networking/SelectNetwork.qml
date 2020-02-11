@@ -166,28 +166,51 @@ Rectangle {
         }
     }
 
-    Kirigami.OverlaySheet {
-        id: passwordSheet
-        parent: networkSelectionView
-        showCloseButton: true
+    Control {
+        id: passwordLayer
+        anchors.fill: parent
+        z: 999999
+        opacity: 0
+        enabled: opacity > 0
+        leftPadding: Kirigami.Units.gridUnit
+        rightPadding: Kirigami.Units.gridUnit
         
-        onSheetOpenChanged: {
-            if (sheetOpen) {
+        function open() {
+            passField.text = "";
+            passField.forceActiveFocus();
+            if (securityType > PlasmaNM.Enums.UnknownSecurity) {
                 passField.text = "";
                 passField.forceActiveFocus();
-                if(securityType > PlasmaNM.Enums.UnknownSecurity){
-                    passField.text = "";
-                    passField.forceActiveFocus();
-                } else {
-                    passwordSheet.close()
-                    networkingLoader.push(Qt.resolvedUrl("Connecting.qml"))
-                    handler.addAndActivateConnection(devicePath, specificPath)
-                }
+            } else {
+                close();
+                networkingLoader.push(Qt.resolvedUrl("Connecting.qml"));
+                handler.addAndActivateConnection(devicePath, specificPath);
+            }
+            opacity = 1;
+        }
+
+        function close() {
+            opacity = 0;
+            passField.text = "";
+        }
+
+        Behavior on opacity {
+            OpacityAnimator {
+                duration: Kirigami.Units.longDuration
+                easing.type: Easing.InOutQuad
+            }
+        }
+        background: Rectangle {
+            color: Qt.rgba(0, 0, 0, 0.8)
+            MouseArea {
+                anchors.fill: parent
+                onClicked: passwordLayer.close()
             }
         }
 
         contentItem: ColumnLayout {
             implicitWidth: Kirigami.Units.gridUnit * 25
+            spacing: Kirigami.Units.gridUnit
 
             Kirigami.Heading {
                 level: 1
@@ -201,7 +224,7 @@ Rectangle {
 
             Kirigami.PasswordField {
                 id: passField
-
+                Kirigami.Theme.colorSet: Kirigami.Theme.View
                 Layout.fillWidth: true
                 placeholderText: i18n("Password...")
                 validator: RegExpValidator {
@@ -215,14 +238,25 @@ Rectangle {
                 onAccepted: {
                     networkingLoader.push(Qt.resolvedUrl("Connecting.qml"))
                     handler.addAndActivateConnection(devicePath, specificPath, passField.text)
+                    passwordLayer.close();
                 }
             }
 
-            Button {
-                Layout.fillWidth: true
-                text: i18n("Connect")
-
-                onClicked: passField.accepted();
+            ColumnLayout {
+                Layout.alignment: Qt.AlignCenter
+                Button {
+                    Layout.preferredWidth: passField.width / 4 * 3
+                    text: i18n("Connect")
+                    onClicked: passField.accepted();
+                }
+                Button {
+                    Layout.preferredWidth: passField.width / 4 * 3
+                    text: i18n("Cancel")
+                    onClicked: passwordLayer.close();
+                }
+            }
+            Item {
+                Layout.fillHeight: true
             }
         }
     }
