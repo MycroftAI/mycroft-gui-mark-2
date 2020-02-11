@@ -202,10 +202,6 @@ Rectangle {
         }
         background: Rectangle {
             color: Qt.rgba(0, 0, 0, 0.8)
-            MouseArea {
-                anchors.fill: parent
-                onClicked: passwordLayer.close()
-            }
         }
 
         contentItem: ColumnLayout {
