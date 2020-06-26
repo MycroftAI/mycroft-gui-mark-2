@@ -69,7 +69,7 @@ Item {
     Item {
         id: mainParent
 
-        rotation: {return 90
+        rotation: {
             switch (plasmoid.configuration.rotation) {
             case "CW":
                 return 90;

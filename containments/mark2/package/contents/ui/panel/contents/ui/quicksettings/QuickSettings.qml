@@ -55,6 +55,17 @@ ColumnLayout {
 
         HomeDelegate {}
         WirelessDelegate {}
+        Delegate {
+            iconSource: "image-rotate-symbolic"
+            text: "Rotate"
+            onClicked: {
+                if (plasmoid.configuration.rotation === "CW") {
+                    plasmoid.configuration.rotation = "NORMAL";
+                } else {
+                    plasmoid.configuration.rotation = "CW";
+                }
+            }
+        }
         MuteDelegate {}
         AdditionalSettingsDelegate {}
         RebootDelegate {}
