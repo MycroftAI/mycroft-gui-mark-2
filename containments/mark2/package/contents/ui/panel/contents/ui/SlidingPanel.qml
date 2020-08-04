@@ -28,6 +28,8 @@ PlasmaCore.ColorScope {
     Kirigami.Theme.colorSet: Kirigami.Theme.View
     colorGroup: PlasmaCore.Theme.ViewColorGroup
 
+    readonly property bool horizontal: width > height
+
     readonly property real position: 1 - (flickable.contentY - contentHeight + height) / height
 
     readonly property real contentHeight: quickSettings.height + layout.anchors.margins * 2
@@ -146,6 +148,7 @@ PlasmaCore.ColorScope {
                 }
                 QuickSettings {
                     id: quickSettings
+                    horizontal: root.horizontal
                     Layout.fillWidth: true
                     onDelegateClicked: root.close();
                 }

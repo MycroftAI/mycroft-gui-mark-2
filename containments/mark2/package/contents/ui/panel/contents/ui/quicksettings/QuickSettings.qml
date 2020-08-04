@@ -23,7 +23,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.kirigami 2.5 as Kirigami
 
-ColumnLayout {
+GridLayout {
     id: root
 
     signal delegateClicked
@@ -32,7 +32,10 @@ ColumnLayout {
         print("toggle airplane mode")
     }
 
-    spacing: units.largeSpacing
+    property bool horizontal: false
+    columns: horizontal ? 2 : 1
+    rowSpacing: units.largeSpacing
+    columnSpacing: units.largeSpacing
 
     RowLayout {
         Layout.fillWidth: true
