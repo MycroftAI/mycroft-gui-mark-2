@@ -64,9 +64,15 @@ GridLayout {
             onClicked: {
                 if (plasmoid.configuration.rotation === "CW") {
                     plasmoid.configuration.rotation = "NORMAL";
+                } else if (plasmoid.configuration.rotation === "NORMAL") {
+                    plasmoid.configuration.rotation = "CCW";
+                } else if (plasmoid.configuration.rotation === "CCW") {
+                    plasmoid.configuration.rotation = "UD";
                 } else {
+                    //if (plasmoid.configuration.rotation === "UD") {
                     plasmoid.configuration.rotation = "CW";
                 }
+                print(plasmoid.configuration.rotation)
             }
         }
         MuteDelegate {}
