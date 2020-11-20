@@ -39,6 +39,7 @@ Item {
 //BEGIN properties
     property Item toolBox
     readonly property bool smallScreenMode: Math.min(width, height) < Kirigami.Units.gridUnit * 18
+    property bool serverReady: false
 
 //END properties
 
@@ -53,6 +54,15 @@ Item {
         onTriggered: {
             print("Trying to connect to Mycroft");
             Mycroft.MycroftController.start();
+        }
+    }
+    
+    Connections {
+        target: Mycroft.MycroftController
+        onServerReadyChanged: {
+            if (Mycroft.MycroftController.serverReady) {
+                root.serverReady = true;
+            }
         }
     }
 
@@ -150,14 +160,23 @@ Item {
             Controls.BusyIndicator {
                 anchors.centerIn: parent
                 running: visible
-                visible: !skillView.currentItem
+                visible: !skillView.currentItem && serverReady
+            }
+            
+            Loader {
+                id: startupVideoLoader
+                visible: !serverReady && !Mark2SystemAccess.networkConfigurationVisible ? 1 : 0
+                enabled: !serverReady && !Mark2SystemAccess.networkConfigurationVisible ? 1 : 0
+                active: !serverReady && !Mark2SystemAccess.networkConfigurationVisible ? 1 : 0
+                anchors.fill: parent
+                source: "VideoElement.qml"
             }
 
             Mycroft.SkillView {
                 id: skillView
                 anchors.fill: parent
                 Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
-
+                visible: serverReady
                 bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
             }
 
