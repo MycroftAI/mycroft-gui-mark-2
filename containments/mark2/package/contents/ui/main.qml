@@ -140,6 +140,10 @@ Item {
             }
     //END PulseAudio
 
+    ListeningOverlay {
+        anchors.fill: parent
+        z: 999
+    }
     //BEGIN VirtualKeyboard
             VirtualKeyboardLoader {
                 id: virtualKeyboard
