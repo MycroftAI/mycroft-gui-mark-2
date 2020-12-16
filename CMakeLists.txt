@@ -1,4 +1,5 @@
 PROJECT(mycroft-gui-mark-2)
+set(PROJECT_VERSION 1.0.3)
 
 # Set minimum CMake version (required for CMake 3.0 or later)
 cmake_minimum_required(VERSION 2.8.12)
@@ -43,3 +44,10 @@ plasma_install_package(lookandfeel org.mycroft.mark2 look-and-feel lookandfeel)
 add_subdirectory(containments)
 
 
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
+set(CPACK_DEBIAN_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Mycroft AI")
+set(CPACK_DEBIAN_FILE_NAME "${CMAKE_PROJECT_NAME}_${PROJECT_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
+
+INCLUDE(CPack)
