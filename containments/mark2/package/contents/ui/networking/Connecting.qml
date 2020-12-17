@@ -50,29 +50,24 @@ Item {
     Connections {
         target: handler
         onConnectionActivationFailed: {
-            connectionError = true
+            connectingView.connectionError = true
+            removePathOnFailure = connectionPath
         }
     }
     
-    Connections {
-        target: connectedStatus
-        onConnectedStatusChanged: {
-            if(connectedStatus == 1){
-                connectionError = false
-                networkingLoader.push(Qt.resolvedUrl("../networking/Success.qml"))
-            }
+    onConnectedStatusChanged: {
+        if(connectedStatus == 1) {
+            connectionError = false
+            networkingLoader.push(Qt.resolvedUrl("../networking/Success.qml"))
         }
     }
-    
-    Connections {
-        target: disconnectedStatus
-        onDisconnectedStatusChanged: {
-            if(disconnectedStatus == 1 && !connectionError){
-                networkingLoader.pop(null)
-                networkingLoader.push(Qt.resolvedUrl("../networking/Fail.qml"))
-            } else if(disconnectedStatus == 1 && connectionError){
-                networkingLoader.pop(null)
-            }
+
+    onDisconnectedStatusChanged: {
+        if(disconnectedStatus == 1 && !connectingView.connectionError) {
+            networkingLoader.pop(null)
+            networkingLoader.push(Qt.resolvedUrl("../networking/Fail.qml"))
+        } else if(disconnectedStatus == 1 && connectingView.connectionError){
+            networkingLoader.push(Qt.resolvedUrl("../networking/FailPassword.qml"))
         }
     }
 
@@ -81,6 +76,7 @@ Item {
         interval: 1000
         onTriggered: Mark2SystemAccess.networkConfigurationVisible = false
     }
+    
     ColumnLayout {
         anchors.fill: parent
     
@@ -115,4 +111,3 @@ Item {
         }    
     }
 }
- 
