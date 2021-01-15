@@ -48,8 +48,9 @@ Item {
                 Mark2SystemAccess.networkConfigurationVisible = true;
                 automaticLoad = true;
             } else if (automaticLoad && nmStatus.networkStatus == "Connected") {
-                Mark2SystemAccess.networkConfigurationVisible = false;
-                automaticLoad = false;
+                console.log("ignore connected status")
+                //Mark2SystemAccess.networkConfigurationVisible = false;
+                //automaticLoad = false;
             }
         }
     }
