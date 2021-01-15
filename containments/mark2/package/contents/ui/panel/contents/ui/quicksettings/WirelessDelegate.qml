@@ -44,9 +44,14 @@ Delegate {
         id: showConnectionsTimer
         running: true
         interval: 2000
+        property bool showFirstTime: true
         onTriggered: {
             if (networkStatus.networkStatus == "Disconnected") {
                 Mark2SystemAccess.networkConfigurationVisible = true;
+            }
+            if (showFirstTime) {
+                Mark2SystemAccess.networkConfigurationVisible = true;
+                showFirstTime = false
             }
         }
     }
