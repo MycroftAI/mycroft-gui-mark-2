@@ -17,6 +17,7 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.2
 import QtQuick.Controls 2.2 as Controls
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
@@ -35,11 +36,12 @@ Controls.Control {
     bottomPadding: Kirigami.Units.largeSpacing
 
     implicitWidth: Kirigami.Units.iconSizes.medium * 2 + leftPadding + rightPadding
-    implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
+    //implicitHeight: (Window.window.height - buttonsLayout.spacing * 2) / Math.round((Window.window.height - buttonsLayout.spacing * 2) / (contentItem.implicitHeight + topPadding + bottomPadding ))
+    implicitHeight: buttonsLayout.delegateSize
 
     Layout.fillWidth: true
 
-    contentItem: RowLayout {
+    contentItem: RowLayout {Text {text: Window.window.height+" "+delegateRoot.implicitHeight}
         spacing: Kirigami.Units.largeSpacing
         Kirigami.Icon {
             id: icon

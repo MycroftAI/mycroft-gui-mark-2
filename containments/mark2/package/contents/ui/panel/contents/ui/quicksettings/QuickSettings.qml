@@ -32,33 +32,42 @@ GridLayout {
         print("toggle airplane mode")
     }
 
-    property bool horizontal: false
+    property bool horizontal: true
     columns: horizontal ? 2 : 1
     rowSpacing: units.largeSpacing
     columnSpacing: units.largeSpacing
 
     RowLayout {
         Layout.fillWidth: true
+        Layout.alignment: Qt.AlignTop
         spacing: Kirigami.Units.largeSpacing * 2
         BrightnessSlider {
             Layout.fillWidth: true
+            Layout.preferredHeight: root.horizontal ? Window.window.height - buttonsLayout.spacing*2 : implicitHeight
         }
         VolumeSlider {
             Layout.fillWidth: true
+            Layout.preferredHeight: root.horizontal ? Window.window.height - buttonsLayout.spacing*2 : implicitHeight
         }
     }
 
     ColumnLayout {
         id: buttonsLayout
         Layout.fillWidth: true
+        Layout.alignment: Qt.AlignTop
         Layout.minimumWidth: 0
         spacing: Kirigami.Units.largeSpacing * 2
 
-        property int delegateSize: Kirigami.Units.iconSizes.medium * 2 + Kirigami.Units.smallSpacing*2
+        readonly property int minimumDelegateSize: Kirigami.Units.iconSizes.medium  + Kirigami.Units.largeSpacing * 2
+        readonly property int maximumDelegateSize: Kirigami.Units.iconSizes.large  + Kirigami.Units.largeSpacing * 2
+
+        readonly property int dynamicDelegateSize: (Window.window.height - spacing * (visibleChildren.length + 1)) / visibleChildren.length
+
+        readonly property int delegateSize: Math.min(maximumDelegateSize, Math.max(minimumDelegateSize, dynamicDelegateSize))
 
         HomeDelegate {}
         WirelessDelegate {}
-        Delegate {
+        /*Delegate {
             iconSource: "image-rotate-symbolic"
             text: "Rotate"
             onClicked: {
@@ -75,7 +84,7 @@ GridLayout {
                 print(plasmoid.configuration.rotation)
             }
         }
-        MuteDelegate {}
+        MuteDelegate {}*/
         AdditionalSettingsDelegate {}
         RebootDelegate {}
         ShutdownDelegate {}

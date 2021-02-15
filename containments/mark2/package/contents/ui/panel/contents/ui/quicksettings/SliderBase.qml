@@ -35,7 +35,7 @@ Controls.Control {
 
     //Layout.preferredWidth: Kirigami.Units.gridUnit * 5
     Layout.fillWidth: true
-    Layout.preferredHeight: Kirigami.Units.gridUnit * 15
+    implicitHeight: Kirigami.Units.gridUnit * 15
     contentItem: MouseArea {
         //to not cause unwanted scrolls
         preventStealing: true
