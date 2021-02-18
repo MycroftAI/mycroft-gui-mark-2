@@ -41,7 +41,7 @@ Controls.Control {
 
     Layout.fillWidth: true
 
-    contentItem: RowLayout {Text {text: Window.window.height+" "+delegateRoot.implicitHeight}
+    contentItem: RowLayout {
         spacing: Kirigami.Units.largeSpacing
         Kirigami.Icon {
             id: icon
