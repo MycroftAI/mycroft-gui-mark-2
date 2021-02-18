@@ -26,7 +26,7 @@ import org.kde.kirigami 2.5 as Kirigami
 
 import org.kde.plasma.private.volume 0.1 as PA
 
-import "./panel/contents/ui" as Panel
+import "panel" as Panel
 
 import Mycroft 1.0 as Mycroft
 import Mycroft.Private.Mark2SystemAccess 1.0
