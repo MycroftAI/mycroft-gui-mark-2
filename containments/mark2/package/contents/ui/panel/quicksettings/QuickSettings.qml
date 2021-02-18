@@ -67,7 +67,8 @@ GridLayout {
 
         HomeDelegate {}
         WirelessDelegate {}
-        /*Delegate {
+        Delegate {
+            visible: plasmoid.configuration.showRotationButton
             iconSource: "image-rotate-symbolic"
             text: "Rotate"
             onClicked: {
@@ -84,7 +85,9 @@ GridLayout {
                 print(plasmoid.configuration.rotation)
             }
         }
-        MuteDelegate {}*/
+        MuteDelegate {
+            visible: plasmoid.configuration.showMuteButton
+        }
         AdditionalSettingsDelegate {}
         RebootDelegate {}
         ShutdownDelegate {}

@@ -21,6 +21,18 @@
           On devices that don't support hardware screen brightness this just dims the QML scene in software.
       </label>
     </entry>
+    <entry name="showRotationButton" type="Bool">
+      <default>false</default>
+      <label>
+          Show a screen rotation button on the top panel slider
+      </label>
+    </entry>
+    <entry name="showMuteButton" type="Bool">
+      <default>false</default>
+      <label>
+          Show a mute button on the top panel slider
+      </label>
+    </entry>
   </group>
 
 </kcfg>
