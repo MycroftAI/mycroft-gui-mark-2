@@ -45,7 +45,7 @@ SliderBase {
                 Mycroft.MycroftController.sendRequest("mycroft.volume.get", {});
             }
         }
-        onSkillDataRecieved: {
+        onIntentRecevied: {
             if (type == "mycroft.volume.get.response") {
                 slider.value = data.percent;
             }
