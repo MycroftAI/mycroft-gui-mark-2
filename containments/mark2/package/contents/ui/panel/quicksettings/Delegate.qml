@@ -32,11 +32,10 @@ Controls.Control {
 
     leftPadding: Kirigami.Units.largeSpacing
     rightPadding: Kirigami.Units.largeSpacing
-    topPadding: Kirigami.Units.largeSpacing
-    bottomPadding: Kirigami.Units.largeSpacing
+    topPadding: Kirigami.Units.smallSpacing
+    bottomPadding: Kirigami.Units.smallSpacing
 
     implicitWidth: Kirigami.Units.iconSizes.medium * 2 + leftPadding + rightPadding
-    //implicitHeight: (Window.window.height - buttonsLayout.spacing * 2) / Math.round((Window.window.height - buttonsLayout.spacing * 2) / (contentItem.implicitHeight + topPadding + bottomPadding ))
     implicitHeight: buttonsLayout.delegateSize
 
     Layout.fillWidth: true

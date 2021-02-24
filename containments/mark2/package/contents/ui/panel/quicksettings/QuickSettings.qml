@@ -28,19 +28,15 @@ GridLayout {
 
     signal delegateClicked
 
-    function toggleAirplane() {
-        print("toggle airplane mode")
-    }
-
     property bool horizontal: true
     columns: horizontal ? 2 : 1
-    rowSpacing: units.largeSpacing
-    columnSpacing: units.largeSpacing
+    rowSpacing: Kirigami.Units.largeSpacing
+    columnSpacing: Kirigami.Units.largeSpacing
 
     RowLayout {
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignTop
-        spacing: Kirigami.Units.largeSpacing * 2
+        spacing: Kirigami.Units.largeSpacing
         BrightnessSlider {
             Layout.fillWidth: true
             Layout.preferredHeight: root.horizontal ? Window.window.height - buttonsLayout.spacing*2 : implicitHeight
@@ -56,9 +52,9 @@ GridLayout {
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignTop
         Layout.minimumWidth: 0
-        spacing: Kirigami.Units.largeSpacing * 2
+        spacing: Kirigami.Units.largeSpacing
 
-        readonly property int minimumDelegateSize: Kirigami.Units.iconSizes.medium  + Kirigami.Units.largeSpacing * 2
+        readonly property int minimumDelegateSize: Kirigami.Units.iconSizes.medium  + Kirigami.Units.smallSpacing * 2
         readonly property int maximumDelegateSize: Kirigami.Units.iconSizes.large  + Kirigami.Units.largeSpacing * 2
 
         readonly property int dynamicDelegateSize: (Window.window.height - spacing * (visibleChildren.length + 1)) / visibleChildren.length

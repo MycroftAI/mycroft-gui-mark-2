@@ -136,7 +136,7 @@ PlasmaCore.ColorScope {
         MouseArea {
             id: flickableContents
             width: parent.width
-            implicitHeight: layout.implicitHeight + layout.anchors.margins * 2
+            implicitHeight: layout.implicitHeight + layout.anchors.margins
 
             ColumnLayout {
                 id: layout
@@ -144,7 +144,7 @@ PlasmaCore.ColorScope {
 
                 anchors {
                     fill: parent
-                    margins: Kirigami.Units.largeSpacing * 2
+                    margins: Kirigami.Units.largeSpacing
                 }
                 QuickSettings {
                     id: quickSettings
