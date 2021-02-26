@@ -49,6 +49,9 @@ SliderBase {
             if (type == "mycroft.volume.get.response") {
                 slider.value = data.percent;
             }
+            if (type == "hardware.volume"){
+                slider.value = data.volume;
+            }
         }
     }
 
