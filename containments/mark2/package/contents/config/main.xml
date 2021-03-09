@@ -7,6 +7,7 @@
 
   <group name="General">
     <entry name="rotation" type="String">
+      <default>NORMAL</default>
       <label>
           Software rotation of the graphics. Allowed values are
           NORMAL: 0 degrees (default)
