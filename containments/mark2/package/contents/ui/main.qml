@@ -86,112 +86,59 @@ Item {
         width: rotation == 0 || rotation == 180 ? parent.width : parent.height
         height: rotation == 0 || rotation == 180 ? parent.height : parent.width
 
-        MouseArea {
+
+//BEGIN VirtualKeyboard
+        VirtualKeyboardLoader {
+            id: virtualKeyboard
+            z: 1000
+        }
+//END VirtualKeyboard
+
+        Controls.BusyIndicator {
+            anchors.centerIn: parent
+            running: visible
+            visible: !skillView.currentItem
+        }
+
+        Mycroft.SkillView {
+            id: skillView
             anchors.fill: parent
-            property int startMouseY: -1
-            property int startVolume: -1
-            preventStealing: false;
+            Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
 
-            drag.filterChildren: true
-            drag.target: skillView
+            bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
+        }
 
-            onPressed: {
-                if (networkingArea.visible) {
-                    return;
+        Controls.Button {
+            anchors.centerIn: parent
+            text: "start"
+            visible: Mycroft.MycroftController.status == Mycroft.MycroftController.Closed
+            onClicked: Mycroft.MycroftController.start();
+        }
+
+        Rectangle {
+            id: networkingArea
+            anchors.fill: parent
+
+            visible: Mark2SystemAccess.networkConfigurationVisible
+
+            Kirigami.Theme.inherit: false
+            Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+            color: Kirigami.Theme.backgroundColor
+
+            PlasmaCore.ColorScope {
+                anchors {
+                    fill: parent
+                    bottomMargin: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
                 }
-                startVolume = volSlider.value
-                startMouseY = mouse.y
-            }
-            onPositionChanged: {
-                if (networkingArea.visible) {
-                    return;
-                }
-                var delta = startMouseY - mouse.y;
-                if (Math.abs(delta) > Kirigami.Units.gridUnit*2) {
-                    mainParent.preventStealing = true
-                }
-                if (mainParent.preventStealing) {
-                    var volume = Math.max(0, Math.min(1, startVolume + (delta/height)))
-                    Mycroft.MycroftController.sendRequest("mycroft.volume.set", {"percent": volume});
-                    feedbackTimer.running = true;
-                    volSlider.show();
-                } else {
-                    mouse.accepted = false;
-                }
-            }
-            onReleased: mainParent.preventStealing = false;
-            onCanceled: mainParent.preventStealing = false;
-            
+                colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
 
-    //BEGIN PulseAudio
-            PA.SinkModel {
-                id: paSinkModel
-            }
-            PA.VolumeFeedback {
-                id: feedback
-            }
-            Timer {
-                id: feedbackTimer
-                interval: 250
-                onTriggered: feedback.play(paSinkModel.preferredSink.index);
-            }
-            VolumeFeedbackGraphics {
-                id: volSlider
-            }
-    //END PulseAudio
-
-    //BEGIN VirtualKeyboard
-            VirtualKeyboardLoader {
-                id: virtualKeyboard
-                z: 1000
-            }
-    //END VirtualKeyboard
-
-            Controls.BusyIndicator {
-                anchors.centerIn: parent
-                running: visible
-                visible: !skillView.currentItem
-            }
-
-            Mycroft.SkillView {
-                id: skillView
-                anchors.fill: parent
-                Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
-
-                bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
-            }
-
-            Controls.Button {
-                anchors.centerIn: parent
-                text: "start"
-                visible: Mycroft.MycroftController.status == Mycroft.MycroftController.Closed
-                onClicked: Mycroft.MycroftController.start();
-            }
-
-            Rectangle {
-                id: networkingArea
-                anchors.fill: parent
-
-                visible: Mark2SystemAccess.networkConfigurationVisible
-
-                Kirigami.Theme.inherit: false
-                Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
-                color: Kirigami.Theme.backgroundColor
-
-                PlasmaCore.ColorScope {
-                    anchors {
-                        fill: parent
-                        bottomMargin: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
-                    }
-                    colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
-
-                    NetworkingLoader {
-                        id: networkingLoader
-                        anchors.fill: parent
-                    }
+                NetworkingLoader {
+                    id: networkingLoader
+                    anchors.fill: parent
                 }
             }
         }
+
         Item {
             anchors {
                 left: parent.left
