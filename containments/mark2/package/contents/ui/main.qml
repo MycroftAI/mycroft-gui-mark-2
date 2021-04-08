@@ -55,6 +55,20 @@ Item {
             Mycroft.MycroftController.start();
         }
     }
+    
+    Connections {
+        target: Mycroft.MycroftController
+        
+        onIntentRecevied: {
+            if (type == "mycroft.display.screenshot.get") {
+                var filepath = "/tmp/" + "screen-" +  Qt.formatDateTime(new Date(), "hhmmss-ddMMyy") + ".png"
+                mainParent.grabToImage(function(result) {
+                    result.saveToFile(filepath);
+                });
+                Mycroft.MycroftController.sendMessage("mycroft.display.screenshot.result", {"result": filepath});
+            }
+        }
+    }
 
     
 //END slots
