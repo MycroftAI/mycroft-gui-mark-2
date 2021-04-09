@@ -65,7 +65,7 @@ Item {
                 mainParent.grabToImage(function(result) {
                     result.saveToFile(filepath);
                 });
-                Mycroft.MycroftController.sendMessage("mycroft.display.screenshot.result", {"result": filepath});
+                Mycroft.MycroftController.sendRequest("mycroft.display.screenshot.result", {"result": filepath});
             }
         }
     }
