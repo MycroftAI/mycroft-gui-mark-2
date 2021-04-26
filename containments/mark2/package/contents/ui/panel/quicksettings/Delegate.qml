@@ -55,7 +55,7 @@ Controls.Control {
             Layout.fillWidth: true
             text: model.text
             font.bold: true
-            color: iconMouseArea.pressed ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
+            color: iconMouseArea.pressed ? Kirigami.Theme.highlightedTextColor : (delegateRoot.enabled ? Kirigami.Theme.textColor : Kirigami.Theme.disabledTextColor)
             //visible: paintedWidth <= parent.width
             elide: Text.ElideRight
         }
