@@ -27,6 +27,7 @@ import org.kde.kirigami 2.5 as Kirigami
 import org.kde.plasma.private.volume 0.1 as PA
 
 import "panel" as Panel
+import "osd" as Osd
 
 import Mycroft 1.0 as Mycroft
 import Mycroft.Private.Mark2SystemAccess 1.0
@@ -112,6 +113,24 @@ Item {
             anchors.centerIn: parent
             running: visible
             visible: !skillView.currentItem
+        }
+
+        Item {
+            anchors.fill: parent
+            visible: panel.position < 0.05
+            enabled: panel.position < 0.05
+            z: 10
+
+            Osd.VolumeOSD {
+                id: volumeOSD
+                height: Mycroft.Units.gridUnit * 6
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: Mycroft.Units.gridUnit * 2
+                anchors.rightMargin: Mycroft.Units.gridUnit * 2
+                anchors.verticalCenter: parent.verticalCenter
+                refSlidingPanel: panel.position
+            }
         }
 
         Mycroft.SkillView {
