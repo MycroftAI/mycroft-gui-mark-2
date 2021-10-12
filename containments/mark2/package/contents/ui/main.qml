@@ -119,7 +119,7 @@ Item {
             anchors.fill: parent
             visible: panel.position < 0.05
             enabled: panel.position < 0.05
-	    color: Qt.rgba(0, 0, 0, 0)
+            color: Qt.rgba(0, 0, 0, 0)
             z: 10
 
             Osd.VolumeOSD {
