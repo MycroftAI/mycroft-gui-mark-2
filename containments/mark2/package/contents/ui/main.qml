@@ -140,6 +140,11 @@ Item {
             Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
 
             bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
+
+            ListenerAnimation {
+                id: listenerAnimator
+                anchors.fill: parent
+            }
         }
 
         Controls.Button {
