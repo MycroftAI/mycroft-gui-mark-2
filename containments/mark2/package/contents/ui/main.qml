@@ -115,10 +115,11 @@ Item {
             visible: !skillView.currentItem
         }
 
-        Item {
+        Rectangle {
             anchors.fill: parent
             visible: panel.position < 0.05
             enabled: panel.position < 0.05
+	    color: Qt.rgba(0, 0, 0, 0)
             z: 10
 
             Osd.VolumeOSD {
@@ -126,8 +127,8 @@ Item {
                 height: Mycroft.Units.gridUnit * 6
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.leftMargin: Mycroft.Units.gridUnit * 2
-                anchors.rightMargin: Mycroft.Units.gridUnit * 2
+                anchors.leftMargin: Mycroft.Units.gridUnit * 3
+                anchors.rightMargin: Mycroft.Units.gridUnit * 3
                 anchors.verticalCenter: parent.verticalCenter
                 refSlidingPanel: panel.position
             }

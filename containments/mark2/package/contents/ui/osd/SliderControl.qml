@@ -149,12 +149,12 @@ Controls.Control {
         layer.enabled: true
         layer.effect: DropShadow {
             anchors.fill: parent
-            radius: 8
-            samples: 17
+            radius: 40
+            samples: 32
             horizontalOffset: 0
             verticalOffset: 0
-            spread: 0.4
-            color: "#ffffff"
+            spread: 0
+            color: "#000000"
         }
     }
 }

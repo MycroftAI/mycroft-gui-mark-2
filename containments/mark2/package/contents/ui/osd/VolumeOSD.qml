@@ -45,6 +45,7 @@ SliderControl {
 
         onIntentRecevied:{
             if (type == "hardware.volume") {
+		root.parent.color = Qt.rgba(0, 0, 0, 0.5)
                 root.visible = true
                 root.value = data.volume;
                 feedbackTimer.restart()
@@ -57,6 +58,7 @@ SliderControl {
         interval: 5000
 
         onTriggered: {
+	    root.parent.color = Qt.rgba(0, 0, 0, 0)
             root.visible = false
         }
     }
