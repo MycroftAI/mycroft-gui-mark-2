@@ -17,6 +17,7 @@
 
 import QtQuick 2.9
 import Mycroft 1.0 as Mycroft
+import org.kde.plasma.private.volume 0.1 as PA
 
 SliderControl {
     id: root
@@ -37,6 +38,7 @@ SliderControl {
 
     onChangeValueChanged: {
         Mycroft.MycroftController.sendRequest("mycroft.volume.set", {"percent": changeValue});
+        feedbackAudioTimer.running = true;
         feedbackTimer.restart()
     }
 
@@ -45,6 +47,7 @@ SliderControl {
 
         onIntentRecevied:{
             if (type == "hardware.volume") {
+                root.parent.color = Qt.rgba(0, 0, 0, 0.5)
                 root.visible = true
                 root.value = data.volume;
                 feedbackTimer.restart()
@@ -57,7 +60,22 @@ SliderControl {
         interval: 5000
 
         onTriggered: {
+	    root.parent.color = Qt.rgba(0, 0, 0, 0)
             root.visible = false
         }
+    }
+
+    PA.SinkModel {
+        id: paSinkModel
+    }
+
+    PA.VolumeFeedback {
+        id: feedbackAudio
+    }
+
+    Timer {
+        id: feedbackAudioTimer
+        interval: 250
+        onTriggered: feedbackAudio.play(paSinkModel.preferredSink.index);
     }
 }
