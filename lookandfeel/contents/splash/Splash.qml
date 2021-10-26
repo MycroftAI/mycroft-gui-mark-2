@@ -51,7 +51,6 @@ Rectangle {
             anchors.centerIn: parent
             width: Math.min(parent.width, parent.height)
             height: width
-            rotation: 90
 
             source: Qt.resolvedUrl("thinking.json")
 
