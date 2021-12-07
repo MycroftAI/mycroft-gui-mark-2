@@ -41,5 +41,6 @@ install(FILES MycroftMark2.colors
         DESTINATION ${DATA_INSTALL_DIR}/color-schemes/)
 plasma_install_package(lookandfeel org.mycroft.mark2 look-and-feel lookandfeel)
 add_subdirectory(containments)
+add_subdirectory(icons)
 
 
