@@ -1,8 +1,9 @@
 ########### install files ###############
+# Disabling categories as they don't exist
+# For adding categories add them to set()
+# Disabled categories "animations applets apps categories preferences devices emblems mimetypes places status"
 
-set(icon_dirs
-    actions animations applets apps categories preferences devices emblems
-    mimetypes places status)
+set(icon_dirs actions)
 
 set(ICONS_INSTALL_DIR ${KDE_INSTALL_FULL_ICONDIR}/mycroftmark2)
 
