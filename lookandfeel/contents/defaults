@@ -8,7 +8,7 @@ Containment=org.kde.mycroft.mark2
 ColorScheme=MycroftMark2
 
 [kdeglobals][Icons]
-Theme=breeze
+Theme=Mark2
 
 [plasmarc][Theme]
 name=default
