@@ -46,18 +46,31 @@ Rectangle {
             property int smallSpacing: Math.max(2, gridUnit/4)
         }
 
-        LottieAnimation {
+        AnimatedImage {
             id: introAnimation
             anchors.centerIn: parent
             width: Math.min(parent.width, parent.height)
             height: width
 
-            source: Qt.resolvedUrl("thinking.json")
+            source: Qt.resolvedUrl("boot.gif")
 
-            loops: Animation.Infinite
             fillMode: Image.PreserveAspectFit
             visible: true
-            running: true
+            playing: true
         }
+
+        //LottieAnimation {
+        //    id: introAnimation
+        //    anchors.centerIn: parent
+        //    width: Math.min(parent.width, parent.height)
+        //    height: width
+
+        //    source: Qt.resolvedUrl("thinking.json")
+
+        //    loops: Animation.Infinite
+        //    fillMode: Image.PreserveAspectFit
+        //    visible: true
+        //    running: true
+        //}
     }
 }

@@ -109,11 +109,22 @@ Item {
         }
 //END VirtualKeyboard
 
-        Controls.BusyIndicator {
+        Image {
             anchors.centerIn: parent
-            running: visible
+            width: Math.min(parent.width, parent.height)
+            height: width
+
+            source: Qt.resolvedUrl("splash.png")
+
+            fillMode: Image.PreserveAspectFit
             visible: !skillView.currentItem
         }
+
+        //Controls.BusyIndicator {
+        //    anchors.centerIn: parent
+        //    running: visible
+        //    visible: !skillView.currentItem
+        //}
 
         Rectangle {
             anchors.fill: parent
