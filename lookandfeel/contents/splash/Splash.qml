@@ -27,11 +27,7 @@ Rectangle {
 
     onStageChanged: {
         if (stage == 2) {
-            introAnimation.running = true;
-        } else if (stage == 4) {
-            introAnimation.running = false;
-            introAnimation.loops = 1;
-            introAnimation.running = true;
+            introAnimation.playing = true;
         }
     }
 
@@ -56,7 +52,6 @@ Rectangle {
 
             fillMode: Image.PreserveAspectFit
             visible: true
-            playing: true
         }
 
         //LottieAnimation {
