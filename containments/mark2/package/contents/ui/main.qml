@@ -145,6 +145,50 @@ Item {
             }
         }
 
+        Mycroft.SkillView {
+            id: skillView
+            anchors.fill: parent
+            Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+
+            bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
+
+            ListenerAnimation {
+                id: listenerAnimator
+                anchors.fill: parent
+            }
+        }
+
+        Controls.Button {
+            anchors.centerIn: parent
+            text: "start"
+            visible: Mycroft.MycroftController.status == Mycroft.MycroftController.Closed
+            onClicked: Mycroft.MycroftController.start();
+        }
+
+        Rectangle {
+            id: networkingArea
+            anchors.fill: parent
+
+            visible: Mark2SystemAccess.networkConfigurationVisible
+
+            Kirigami.Theme.inherit: false
+            Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+            color: Kirigami.Theme.backgroundColor
+
+            PlasmaCore.ColorScope {
+                anchors {
+                    fill: parent
+                    bottomMargin: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
+                }
+                colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
+
+                NetworkingLoader {
+                    id: networkingLoader
+                    anchors.fill: parent
+                }
+            }
+        }
+
         Item {
             anchors {
                 left: parent.left
@@ -157,19 +201,6 @@ Item {
                 id: panel
                 width: mainParent.width
                 height: mainParent.height
-            }
-        }
-
-        Mycroft.SkillView {
-            id: skillView
-            anchors.fill: parent
-            Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
-
-            bottomPadding: virtualKeyboard.state == "visible" ? virtualKeyboard.height : 0
-
-            ListenerAnimation {
-                id: listenerAnimator
-                anchors.fill: parent
             }
         }
     }
