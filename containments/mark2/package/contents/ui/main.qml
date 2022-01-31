@@ -156,6 +156,12 @@ Item {
                 id: listenerAnimator
                 anchors.fill: parent
             }
+
+            onCurrentItemChanged {
+                if (skillView.currentItem != null) {
+                    skillView.currentItem.focus = true
+                }
+            }
         }
 
         Controls.Button {
