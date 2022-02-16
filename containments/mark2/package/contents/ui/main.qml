@@ -110,14 +110,33 @@ Item {
 //END VirtualKeyboard
 
         Image {
-            anchors.centerIn: parent
-            width: Math.min(parent.width, parent.height)
-            height: width
+            id: splash
+            property var skillGrabResult
+
+            anchors.fill: parent
 
             source: Qt.resolvedUrl("splash.png")
 
             fillMode: Image.PreserveAspectFit
             visible: !skillView.currentItem
+        }
+
+        // HACK: Take a screenshot of the current skill two times a second, and
+        // set it as the background image to avoid showing something else during
+        // skill transitions.
+        Timer {
+            id: skillImageTimer
+            interval: 500
+            running: true
+            repeat: true
+            onTriggered: {
+                if(skillView.currentItem){
+                    skillView.currentItem.grabToImage(function(result) {
+                           splash.skillGrabResult = result;
+                           splash.source = result.url;
+                       });
+                }
+            }
         }
 
         //Controls.BusyIndicator {
