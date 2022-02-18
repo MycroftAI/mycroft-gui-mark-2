@@ -44,9 +44,7 @@ Rectangle {
 
         AnimatedImage {
             id: introAnimation
-            anchors.centerIn: parent
-            width: Math.min(parent.width, parent.height)
-            height: width
+            anchors.fill: parent
 
             source: Qt.resolvedUrl("boot.gif")
 
