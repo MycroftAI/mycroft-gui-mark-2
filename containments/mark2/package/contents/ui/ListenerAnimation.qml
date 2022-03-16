@@ -27,26 +27,44 @@ Rectangle {
     property Gradient borderGradient: borderGradient
     property int borderWidth: Mycroft.Units.gridUnit
     property bool horizontalMode: parent.width > parent.height ? 1 : 0
-    readonly property color primaryBorderColor: "#22A7F0"
+    property color primaryBorderColor: {
+        if (isMuted) {
+            return "#EB5757";
+
+        } else {
+            return "#22A7F0";
+        }
+    }
     readonly property color secondaryBorderColor: Qt.rgba(1, 1, 1, 0.7)
+
+    property bool isAwake: false
+    property bool isMuted: false
+
     color: "transparent"
-    visible: false
+    visible: isAwake || isMuted
+
 
     Connections {
         target: Mycroft.MycroftController
         onIntentRecevied: {
             switch(type){
             case "recognizer_loop:wakeword":
-                rootAnimator.visible = true;
+                rootAnimator.isAwake = true;
                 break
             case "mycroft.mic.listen":
-                rootAnimator.visible = true;
+                rootAnimator.isAwake = true;
                 break
             case "recognizer_loop:record_end":
-                rootAnimator.visible = false;
+                rootAnimator.isAwake = false;
                 break
             case "mycroft.speech.recognition.unknown":
-                rootAnimator.visible = false;
+                rootAnimator.isAwake = false;
+                break
+            case "mycroft.mic.mute":
+                rootAnimator.isMuted = true;
+                break
+            case "mycroft.mic.unmute":
+                rootAnimator.isMuted = false;
                 break
             }
         }
