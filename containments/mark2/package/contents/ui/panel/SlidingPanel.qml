@@ -30,7 +30,7 @@ PlasmaCore.ColorScope {
 
     readonly property bool horizontal: width > height
 
-    readonly property real position: 1 - (flickable.contentY - contentHeight + height) / height
+    readonly property real position: state == "closed" ? 0 : 1 - (flickable.contentY - contentHeight + height) / height
 
     readonly property real contentHeight: quickSettings.height + layout.anchors.margins * 2
     state: "closed"
